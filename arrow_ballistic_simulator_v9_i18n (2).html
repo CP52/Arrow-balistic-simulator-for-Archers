@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏹 Arrow Ballistic Simulator - Barebow/Stringwalking</title>
+    <style>
+        /* ========== STILI IDENTICI ALL'ORIGINALE (non modificati) ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 14px; line-height: 1.5; }
+        
+        .theme-dark { background-color: #0f172a; color: #ffffff; }
+        .theme-dark .panel { background-color: #1e293b; border-color: #334155; }
+        .theme-dark .panel-header { background-color: #334155; color: #ffffff; }
+        .theme-dark .panel-header:hover { background-color: #475569; }
+        .theme-dark .input-field { background-color: #334155; border: 1px solid #475569; color: #ffffff; }
+        .theme-dark .label { color: #94a3b8; }
+        .theme-dark .table-header { background-color: #334155; }
+        .theme-dark .table-row-even { background-color: rgba(51, 65, 85, 0.5); }
+        .theme-dark .table-row-highlight { background-color: rgba(79, 70, 229, 0.3); }
+        .theme-dark .table-text { color: #cbd5e1; }
+        .theme-dark .table-text-bold { color: #ffffff; }
+        .theme-dark .tabs-container { background-color: #1e293b; }
+        .theme-dark .tab-btn { background-color: transparent; color: #ffffff; }
+        .theme-dark .tab-btn:hover { background-color: #334155; }
+        .theme-dark .tab-btn.active { background-color: #4f46e5; }
+        .theme-dark .info-box { background-color: #334155; }
+        
+        .theme-light { background-color: #f3f4f6; color: #111827; }
+        .theme-light .panel { background-color: #ffffff; border-color: #d1d5db; }
+        .theme-light .panel-header { background-color: #e5e7eb; color: #111827; }
+        .theme-light .panel-header:hover { background-color: #d1d5db; }
+        .theme-light .input-field { background-color: #f9fafb; border: 2px solid #d1d5db; color: #111827; }
+        .theme-light .input-field:focus { background-color: #ffffff; }
+        .theme-light .label { color: #4b5563; }
+        .theme-light .table-header { background-color: #f3f4f6; }
+        .theme-light .table-row-even { background-color: #f9fafb; }
+        .theme-light .table-row-highlight { background-color: #e0e7ff; }
+        .theme-light .table-text { color: #374151; }
+        .theme-light .table-text-bold { color: #111827; }
+        .theme-light .tabs-container { background-color: #ffffff; border: 1px solid #d1d5db; }
+        .theme-light .tab-btn { background-color: transparent; color: #111827; }
+        .theme-light .tab-btn:hover { background-color: rgba(99, 102, 241, 0.1); }
+        .theme-light .tab-btn.active { background-color: #4f46e5; color: white; }
+        .theme-light .info-box { background-color: #f3f4f6; }
+        
+        .app-container { min-height: 100vh; padding: 8px; font-size: 14px; transition: background-color 0.3s, color 0.3s; }
+        .header { text-align: center; margin-bottom: 16px; padding: 12px; background: linear-gradient(to right, #4f46e5, #7c3aed); border-radius: 12px; position: relative; }
+        .header h1 { font-size: 1.25rem; font-weight: bold; color: white; }
+        .header .subtitle { font-size: 0.75rem; color: #c7d2fe; }
+        .header .credits { font-size: 0.75rem; color: #a5b4fc; margin-top: 4px; }
+        .theme-toggle { position: absolute; top: 8px; right: 8px; padding: 8px; border-radius: 8px; background-color: rgba(255,255,255,0.2); border: none; cursor: pointer; font-size: 1rem; transition: background-color 0.2s; }
+        .theme-toggle:hover { background-color: rgba(255,255,255,0.3); }
+        .lang-unit-bar { position: absolute; top: 8px; left: 8px; display: flex; gap: 6px; align-items: center; }
+        .lang-unit-bar button { padding: 6px 10px; border-radius: 8px; background-color: rgba(255,255,255,0.2); border: none; cursor: pointer; font-size: 0.9rem; transition: background-color 0.2s; color: white; font-weight: bold; }
+        .lang-unit-bar button:hover { background-color: rgba(255,255,255,0.3); }
+        .unit-toggle-bar { position: absolute; top: 8px; right: 70px; display: flex; gap: 4px; align-items: center; }
+        .unit-toggle-bar button { padding: 6px 10px; border-radius: 8px; background-color: rgba(255,255,255,0.2); border: none; cursor: pointer; font-size: 0.9rem; transition: background-color 0.2s; color: white; font-weight: bold; }
+        .unit-toggle-bar button:hover { background-color: rgba(255,255,255,0.3); }
+        
+        .main-layout { display: flex; flex-direction: column; gap: 12px; }
+        @media (min-width: 1024px) { .main-layout { flex-direction: row; } }
+        
+        .params-grid { width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; align-content: start; }
+        @media (min-width: 1024px) { .params-grid { width: 420px; flex-shrink: 0; } }
+        @media (max-width: 480px) { .params-grid { grid-template-columns: 1fr; gap: 6px; } }
+        .col-span-2 { grid-column: span 2; }
+        @media (max-width: 480px) { .col-span-2 { grid-column: span 1; } }
+        .inner-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        
+        .collapsible-panel { border-radius: 8px; overflow: hidden; }
+        .panel-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; text-align: left; font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer; transition: background-color 0.2s; }
+        .panel-header .arrow { color: #818cf8; }
+        .panel-body { padding: 12px; border: 1px solid; border-top: none; border-radius: 0 0 8px 8px; }
+        
+        .form-group { margin-bottom: 8px; }
+        .form-group label { display: block; font-size: 0.75rem; margin-bottom: 4px; }
+        .input-field { width: 100%; padding: 4px 8px; font-size: 0.875rem; border-radius: 4px; outline: none; transition: border-color 0.2s, background-color 0.2s; }
+        .input-field:focus { border-color: #6366f1; }
+        .input-field:disabled { opacity: 0.5; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .checkbox-group input[type="checkbox"] { accent-color: #6366f1; }
+        .checkbox-group span { font-size: 0.75rem; }
+        .info-box { margin-top: 8px; padding: 8px; border-radius: 4px; font-size: 0.75rem; }
+        .info-box .value { font-weight: bold; color: #22c55e; }
+        .info-box .value-blue { font-weight: bold; color: #3b82f6; }
+        
+        .btn-simulate { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; background: linear-gradient(to right, #22c55e, #059669); color: white; font-size: 1rem; transition: opacity 0.2s; }
+        .btn-simulate:hover { opacity: 0.9; }
+        .btn-simulate:disabled { background: #64748b; cursor: not-allowed; }
+        
+        .results-column { flex: 1; min-width: 0; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+        @media (max-width: 768px) { .metrics-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 480px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; } }
+        .metric-card { padding: 12px; border-radius: 8px; text-align: center; border: 1px solid; }
+        .metric-card .title { font-size: 0.75rem; }
+        .metric-card .value { font-size: 1.125rem; font-weight: bold; color: #6366f1; }
+        
+        .tabs-container { display: flex; gap: 4px; padding: 4px; border-radius: 8px; margin-bottom: 12px; }
+        .tab-btn { flex: 1; padding: 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; border: none; cursor: pointer; transition: background-color 0.2s; }
+        .tab-content { padding: 12px; border-radius: 12px; border: 1px solid; }
+        .chart-container { height: 320px; position: relative; }
+        
+        .legend { display: flex; justify-content: flex-end; gap: 16px; margin-bottom: 8px; font-size: 0.7rem; }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot { width: 12px; height: 3px; border-radius: 1px; }
+        
+        .target-legend { display: flex; justify-content: center; gap: 16px; margin-top: 8px; font-size: 0.75rem; }
+        .target-legend .item { display: flex; align-items: center; gap: 4px; }
+        .target-legend .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .target-legend .dot.orange { background-color: #f97316; }
+        .target-legend .dot.green { background-color: #22c55e; }
+        .target-legend .success { color: #22c55e; font-weight: bold; }
+        
+        .sight-section { display: flex; gap: 16px; }
+        .sight-table-container { flex: 1; overflow-x: auto; }
+        .sight-table { width: 100%; font-size: 0.75rem; border-collapse: collapse; }
+        .sight-table th, .sight-table td { padding: 4px 8px; text-align: left; }
+        .sight-table th { font-weight: 600; }
+        .sight-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .sight-header h3 { font-weight: bold; color: #6366f1; }
+        .btn-csv { padding: 4px 12px; background-color: #22c55e; color: white; border: none; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-csv:hover { background-color: #16a34a; }
+        
+        .sight-scale { width: 160px; flex-shrink: 0; }
+        .sight-scale-inner { position: relative; height: 280px; margin: 16px auto; width: 100px; }
+        .sight-bar { position: absolute; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; border-radius: 2px; background: #64748b; }
+        .sight-mark { position: absolute; left: 50%; transform: translateX(-50%); height: 2px; }
+        .sight-mark-label { position: absolute; font-size: 0.65rem; white-space: nowrap; top: -5px; }
+        .sight-mark-label.left { left: 28px; }
+        .sight-mark-label.right { right: 28px; }
+        .zero-line { position: absolute; left: 50%; transform: translateX(-50%); width: 40px; height: 2px; background-color: #ef4444; }
+        .zero-label { position: absolute; left: 45px; top: -6px; font-size: 0.65rem; color: #ef4444; }
+        .laser-dot { position: absolute; left: 50%; width: 10px; height: 10px; background-color: #22c55e; border-radius: 50%; margin-left: -5px; }
+        .laser-label { position: absolute; left: 18px; top: -3px; font-size: 0.65rem; color: #22c55e; }
+        
+        .placeholder { height: 384px; display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 32px; border: 1px solid; }
+        .placeholder-content { text-align: center; }
+        .placeholder-icon { font-size: 4rem; margin-bottom: 16px; }
+        .placeholder-title { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+        
+        .footer { text-align: center; margin-top: 16px; font-size: 0.75rem; }
+        
+        .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+        .modal-content { max-width: 32rem; width: 100%; padding: 16px; border-radius: 12px; border: 1px solid; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .modal-header h3 { font-weight: bold; color: #6366f1; }
+        .modal-close { font-size: 1.5rem; background: none; border: none; cursor: pointer; }
+        .modal-close:hover { color: #ef4444; }
+        .modal-textarea { width: 100%; height: 192px; padding: 8px; font-size: 0.75rem; font-family: monospace; border-radius: 4px; resize: none; }
+        .modal-buttons { display: flex; gap: 8px; margin-top: 12px; }
+        .modal-btn { flex: 1; padding: 8px; border-radius: 4px; font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer; color: white; }
+        .modal-btn.copy-btn { background-color: #4f46e5; }
+        .modal-btn.download-btn { background-color: #22c55e; }
+        .modal-btn.close-btn { background-color: #64748b; }
+        .theme-light .modal-btn.close-btn { background-color: #d1d5db; color: #111827; }
+    </style>
+</head>
+<body>
+    <div id="root"><div style="padding:40px;text-align:center;font-family:sans-serif;">⏳ Caricamento...</div></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+(function() {
+    if (typeof React === 'undefined') {
+        document.getElementById('root').innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;"><h2 style="color:#ef4444;">Errore</h2><p>Librerie React non caricate. Serve connessione internet.</p></div>';
+        return;
+    }
+
+const { useState, useMemo, useCallback, useContext, createContext, useEffect } = React;
+const { createRoot } = ReactDOM;
+const e = React.createElement;
+
+// =============================================================================
+// COSTANTI FISICHE (SEMPRE METRICHE)
+// =============================================================================
+const PHYSICAL_CONSTANTS = { G: 9.80665, AIR_DENSITY_STP: 1.225, AIR_VISCOSITY: 1.81e-5, R_SPECIFIC_AIR: 287.058 };
+const TIP_TYPE_CD_FACTOR = {
+    "Slanciata (field/bullet)": 0.92, "Standard": 1.00, "Broadhead (larga)": 1.18,
+    "Judo Point": 1.32, "Bodkin": 0.88, "Blunt": 1.45
+};
+const FLETCHING_TYPE_CD_FACTOR = {
+    "Nessuna": 1.0, "Low-profile 2-3": 1.2, "Standard 3": 1.3, "Grande 3x5": 1.6, "Flu-flu": 3.0
+};
+const BOW_TYPE_EFFICIENCY = {
+    "longbow": 0.73, "ricurvo": 0.84, "compound": 0.89, "takedown": 0.81, "barebow": 0.79, "hunting_recurve": 0.86
+};
+const COLORS = { primary: '#2E86AB', secondary: '#A23B72', accent: '#F18F01', danger: '#C73E1D', success: '#588157', warning: '#F4A261' };
+
+// =============================================================================
+// TRADUZIONI (i18n)
+// =============================================================================
+const translations = {
+    it: {
+        appTitle: "🏹 Simulatore Balistico",
+        subtitle: "RK4 Adattivo • Generazione Mirino • Analisi Completa",
+        credits: "by Cesare Pagura & Claude",
+        simulate: "🚀 SIMULA",
+        simulating: "⏳ Calcolo...",
+        aimAngle: "Angolo mira",
+        v0: "v₀",
+        flightTime: "Tempo",
+        maxHeight: "H max",
+        drop: "Drop",
+        maxRange: "Gittata max",
+        tabTrajectory: "📈 Traiettoria",
+        tabVelocity: "⚡ Velocità",
+        tabEnergy: "🔋 Energia",
+        tabDrop: "📉 Drop",
+        tabSight: "🎯 Mirino",
+        real: "Reale",
+        ideal: "Ideale",
+        sightLine: "Mira",
+        total: "Totale",
+        target: "Bersaglio",
+        impact: "Impatto",
+        center: "✓ Centro!",
+        arrowPanel: "🎯 Freccia",
+        bowPanel: "🏹 Arco",
+        targetPanel: "🎯 Bersaglio",
+        archerPanel: "👤 Biometria Arciere",
+        environmentPanel: "🌍 Ambiente",
+        sightPanel: "🔍 Geometria Mirino",
+        massLabel: "Peso",
+        lengthLabel: "Lunghezza",
+        diameterLabel: "Diametro",
+        spineLabel: "Spine",
+        tipWeightLabel: "Peso punta",
+        balanceLabel: "Bilanciamento",
+        tipTypeLabel: "Tipo punta",
+        fletchingLabel: "Impennatura",
+        drawForceLabel: "Forza",
+        drawLengthLabel: "Allungo",
+        braceHeightLabel: "Brace height",
+        nockingOffsetLabel: "Offset incocco",
+        bowTypeLabel: "Tipo",
+        efficiencyLabel: "Efficienza",
+        distanceLabel: "Distanza",
+        heightLabel: "Altezza",
+        useMeasuredV0: "Usa v₀ misurata",
+        measuredV0Label: "v₀ (m/s)",
+        neutralHeightLabel: "Altezza sgancio neutra",
+        pelvisHeightLabel: "Altezza bacino",
+        anchorLengthLabel: "Spalla-aggancio",
+        posturalCorrectionLabel: "Correzione posturale",
+        posturalInfo: "La correzione posturale calcola la variazione dell'altezza di sgancio in base all'angolo di tiro (rotazione bacino in posizione 'T')",
+        windLabel: "Vento",
+        tempLabel: "Temperatura",
+        pressureLabel: "Pressione",
+        humidityLabel: "Umidità",
+        altitudeLabel: "Altitudine",
+        eyeToNockLabel: "Occhio-cocca",
+        nockToRiserLabel: "Cocca-riser",
+        distMinLabel: "Dist. min",
+        distMaxLabel: "Dist. max",
+        stepLabel: "Passo",
+        distHeader: "Dist",
+        dropHeader: "Drop",
+        riserHeader: "Riser",
+        energyHeader: "E",
+        velocityHeader: "V",
+        unit_mass_metric: "g",
+        unit_mass_imperial: "gr",
+        unit_length_metric: "m",
+        unit_length_imperial: "in",
+        unit_diameter_metric: "mm",
+        unit_diameter_imperial: "in",
+        unit_drawForce: "lb",
+        unit_speed_metric: "m/s",
+        unit_speed_imperial: "ft/s",
+        unit_energy_metric: "J",
+        unit_energy_imperial: "ft·lb",
+        unit_temp_metric: "°C",
+        unit_temp_imperial: "°F",
+        unit_pressure_metric: "hPa",
+        unit_pressure_imperial: "inHg",
+        unit_altitude_metric: "m",
+        unit_altitude_imperial: "ft",
+        unit_distance_metric: "m",
+        unit_distance_imperial: "yd",
+        unit_drop_metric: "cm",
+        unit_drop_imperial: "in",
+        unit_projection_metric: "cm",
+        unit_projection_imperial: "in",
+        unit_balance_metric: "m",
+        unit_balance_imperial: "in",
+        exportPDF: "📄 Stampa PDF",
+        exportCSV: "📊 Esporta CSV",
+        copy: "📋 Copia",
+        download: "💾 Scarica",
+        close: "Chiudi",
+        // Per i grafici (etichette con unità dinamiche)
+        axis_distance: (unit) => `Distanza (${unit})`,
+        axis_height: (unit) => `Altezza (${unit})`,
+        axis_speed: (unit) => `Velocità (${unit})`,
+        axis_energy: () => `Energia (%)`,
+        axis_drop: (unit) => `Drop (${unit})`
+    },
+    en: {
+        appTitle: "🏹 Ballistic Simulator",
+        subtitle: "Adaptive RK4 • Sight Generation • Full Analysis",
+        credits: "by Cesare Pagura & Claude",
+        simulate: "🚀 SIMULATE",
+        simulating: "⏳ Computing...",
+        aimAngle: "Aim angle",
+        v0: "v₀",
+        flightTime: "Time",
+        maxHeight: "Max H",
+        drop: "Drop",
+        maxRange: "Max range",
+        tabTrajectory: "📈 Trajectory",
+        tabVelocity: "⚡ Velocity",
+        tabEnergy: "🔋 Energy",
+        tabDrop: "📉 Drop",
+        tabSight: "🎯 Sight",
+        real: "Actual",
+        ideal: "Ideal (no drag)",
+        sightLine: "Line of sight",
+        total: "Total",
+        target: "Target",
+        impact: "Impact",
+        center: "✓ Bullseye!",
+        arrowPanel: "🎯 Arrow",
+        bowPanel: "🏹 Bow",
+        targetPanel: "🎯 Target",
+        archerPanel: "👤 Archer's Biometry",
+        environmentPanel: "🌍 Environment",
+        sightPanel: "🔍 Sight Geometry",
+        massLabel: "Mass",
+        lengthLabel: "Length",
+        diameterLabel: "Diameter",
+        spineLabel: "Spine",
+        tipWeightLabel: "Tip weight",
+        balanceLabel: "Balance point",
+        tipTypeLabel: "Tip type",
+        fletchingLabel: "Fletching",
+        drawForceLabel: "Draw force",
+        drawLengthLabel: "Draw length",
+        braceHeightLabel: "Brace height",
+        nockingOffsetLabel: "Nocking offset",
+        bowTypeLabel: "Type",
+        efficiencyLabel: "Efficiency",
+        distanceLabel: "Distance",
+        heightLabel: "Height",
+        useMeasuredV0: "Use measured v₀",
+        measuredV0Label: "v₀ (m/s)",
+        neutralHeightLabel: "Neutral release height",
+        pelvisHeightLabel: "Pelvis height",
+        anchorLengthLabel: "Shoulder-to-anchor",
+        posturalCorrectionLabel: "Postural correction",
+        posturalInfo: "Postural correction adjusts release height based on shooting angle (pelvis rotation in 'T' position)",
+        windLabel: "Wind",
+        tempLabel: "Temperature",
+        pressureLabel: "Pressure",
+        humidityLabel: "Humidity",
+        altitudeLabel: "Altitude",
+        eyeToNockLabel: "Eye to nock",
+        nockToRiserLabel: "Nock to riser",
+        distMinLabel: "Min dist",
+        distMaxLabel: "Max dist",
+        stepLabel: "Step",
+        distHeader: "Dist",
+        dropHeader: "Drop",
+        riserHeader: "Riser",
+        energyHeader: "E",
+        velocityHeader: "V",
+        unit_mass_metric: "g",
+        unit_mass_imperial: "gr",
+        unit_length_metric: "m",
+        unit_length_imperial: "in",
+        unit_diameter_metric: "mm",
+        unit_diameter_imperial: "in",
+        unit_drawForce: "lb",
+        unit_speed_metric: "m/s",
+        unit_speed_imperial: "ft/s",
+        unit_energy_metric: "J",
+        unit_energy_imperial: "ft·lb",
+        unit_temp_metric: "°C",
+        unit_temp_imperial: "°F",
+        unit_pressure_metric: "hPa",
+        unit_pressure_imperial: "inHg",
+        unit_altitude_metric: "m",
+        unit_altitude_imperial: "ft",
+        unit_distance_metric: "m",
+        unit_distance_imperial: "yd",
+        unit_drop_metric: "cm",
+        unit_drop_imperial: "in",
+        unit_projection_metric: "cm",
+        unit_projection_imperial: "in",
+        unit_balance_metric: "m",
+        unit_balance_imperial: "in",
+        exportPDF: "📄 Export PDF",
+        exportCSV: "📊 Export CSV",
+        copy: "📋 Copy",
+        download: "💾 Download",
+        close: "Close",
+        axis_distance: (unit) => `Distance (${unit})`,
+        axis_height: (unit) => `Height (${unit})`,
+        axis_speed: (unit) => `Velocity (${unit})`,
+        axis_energy: () => `Energy (%)`,
+        axis_drop: (unit) => `Drop (${unit})`
+    },
+    es: {
+        appTitle: "🏹 Simulador Balístico",
+        subtitle: "RK4 Adaptativo • Generación de Visor • Análisis Completo",
+        credits: "por Cesare Pagura & Claude",
+        simulate: "🚀 SIMULAR",
+        simulating: "⏳ Calculando...",
+        aimAngle: "Ángulo de mira",
+        v0: "v₀",
+        flightTime: "Tiempo",
+        maxHeight: "H máx",
+        drop: "Caída",
+        maxRange: "Alcance máx",
+        tabTrajectory: "📈 Trayectoria",
+        tabVelocity: "⚡ Velocidad",
+        tabEnergy: "🔋 Energía",
+        tabDrop: "📉 Caída",
+        tabSight: "🎯 Visor",
+        real: "Real",
+        ideal: "Ideal (sin arrastre)",
+        sightLine: "Línea de mira",
+        total: "Total",
+        target: "Objetivo",
+        impact: "Impacto",
+        center: "✓ ¡Diana!",
+        arrowPanel: "🎯 Flecha",
+        bowPanel: "🏹 Arco",
+        targetPanel: "🎯 Objetivo",
+        archerPanel: "👤 Biometría del Arquero",
+        environmentPanel: "🌍 Ambiente",
+        sightPanel: "🔍 Geometría del Visor",
+        massLabel: "Masa",
+        lengthLabel: "Longitud",
+        diameterLabel: "Diámetro",
+        spineLabel: "Spine",
+        tipWeightLabel: "Peso de punta",
+        balanceLabel: "Punto de equilibrio",
+        tipTypeLabel: "Tipo de punta",
+        fletchingLabel: "Emplumado",
+        drawForceLabel: "Fuerza de apertura",
+        drawLengthLabel: "Apertura",
+        braceHeightLabel: "Brace height",
+        nockingOffsetLabel: "Offset de culatín",
+        bowTypeLabel: "Tipo",
+        efficiencyLabel: "Eficiencia",
+        distanceLabel: "Distancia",
+        heightLabel: "Altura",
+        useMeasuredV0: "Usar v₀ medida",
+        measuredV0Label: "v₀ (m/s)",
+        neutralHeightLabel: "Altura de lanzamiento neutra",
+        pelvisHeightLabel: "Altura de pelvis",
+        anchorLengthLabel: "Hombro a anclaje",
+        posturalCorrectionLabel: "Corrección postural",
+        posturalInfo: "La corrección postural ajusta la altura de lanzamiento según el ángulo de tiro (rotación de pelvis en posición 'T')",
+        windLabel: "Viento",
+        tempLabel: "Temperatura",
+        pressureLabel: "Presión",
+        humidityLabel: "Humedad",
+        altitudeLabel: "Altitud",
+        eyeToNockLabel: "Ojo a culatín",
+        nockToRiserLabel: "Culatín a empuñadura",
+        distMinLabel: "Dist. mín",
+        distMaxLabel: "Dist. máx",
+        stepLabel: "Paso",
+        distHeader: "Dist",
+        dropHeader: "Caída",
+        riserHeader: "Visor",
+        energyHeader: "E",
+        velocityHeader: "V",
+        unit_mass_metric: "g",
+        unit_mass_imperial: "gr",
+        unit_length_metric: "m",
+        unit_length_imperial: "in",
+        unit_diameter_metric: "mm",
+        unit_diameter_imperial: "in",
+        unit_drawForce: "lb",
+        unit_speed_metric: "m/s",
+        unit_speed_imperial: "ft/s",
+        unit_energy_metric: "J",
+        unit_energy_imperial: "ft·lb",
+        unit_temp_metric: "°C",
+        unit_temp_imperial: "°F",
+        unit_pressure_metric: "hPa",
+        unit_pressure_imperial: "inHg",
+        unit_altitude_metric: "m",
+        unit_altitude_imperial: "ft",
+        unit_distance_metric: "m",
+        unit_distance_imperial: "yd",
+        unit_drop_metric: "cm",
+        unit_drop_imperial: "in",
+        unit_projection_metric: "cm",
+        unit_projection_imperial: "in",
+        unit_balance_metric: "m",
+        unit_balance_imperial: "in",
+        exportPDF: "📄 Exportar PDF",
+        exportCSV: "📊 Exportar CSV",
+        copy: "📋 Copiar",
+        download: "💾 Descargar",
+        close: "Cerrar",
+        axis_distance: (unit) => `Distancia (${unit})`,
+        axis_height: (unit) => `Altura (${unit})`,
+        axis_speed: (unit) => `Velocidad (${unit})`,
+        axis_energy: () => `Energía (%)`,
+        axis_drop: (unit) => `Caída (${unit})`
+    },
+    fr: {
+        appTitle: "🏹 Simulateur Balistique",
+        subtitle: "RK4 Adaptatif • Génération de Viseur • Analyse Complète",
+        credits: "par Cesare Pagura & Claude",
+        simulate: "🚀 SIMULER",
+        simulating: "⏳ Calcul...",
+        aimAngle: "Angle de visée",
+        v0: "v₀",
+        flightTime: "Temps",
+        maxHeight: "H max",
+        drop: "Chute",
+        maxRange: "Portée max",
+        tabTrajectory: "📈 Trajectoire",
+        tabVelocity: "⚡ Vitesse",
+        tabEnergy: "🔋 Énergie",
+        tabDrop: "📉 Chute",
+        tabSight: "🎯 Viseur",
+        real: "Réel",
+        ideal: "Idéal (sans traînée)",
+        sightLine: "Ligne de visée",
+        total: "Total",
+        target: "Cible",
+        impact: "Impact",
+        center: "✓ Dans le mille !",
+        arrowPanel: "🎯 Flèche",
+        bowPanel: "🏹 Arc",
+        targetPanel: "🎯 Cible",
+        archerPanel: "👤 Biométrie de l'Archer",
+        environmentPanel: "🌍 Environnement",
+        sightPanel: "🔍 Géométrie du Viseur",
+        massLabel: "Masse",
+        lengthLabel: "Longueur",
+        diameterLabel: "Diamètre",
+        spineLabel: "Spine",
+        tipWeightLabel: "Poids de pointe",
+        balanceLabel: "Point d'équilibre",
+        tipTypeLabel: "Type de pointe",
+        fletchingLabel: "Empennage",
+        drawForceLabel: "Force d'allonge",
+        drawLengthLabel: "Allonge",
+        braceHeightLabel: "Brace height",
+        nockingOffsetLabel: "Décalage d'encoche",
+        bowTypeLabel: "Type",
+        efficiencyLabel: "Efficacité",
+        distanceLabel: "Distance",
+        heightLabel: "Hauteur",
+        useMeasuredV0: "Utiliser v₀ mesurée",
+        measuredV0Label: "v₀ (m/s)",
+        neutralHeightLabel: "Hauteur de lâcher neutre",
+        pelvisHeightLabel: "Hauteur du bassin",
+        anchorLengthLabel: "Épaule à ancrage",
+        posturalCorrectionLabel: "Correction posturale",
+        posturalInfo: "La correction posturale ajuste la hauteur de lâcher en fonction de l'angle de tir (rotation du bassin en position 'T')",
+        windLabel: "Vent",
+        tempLabel: "Température",
+        pressureLabel: "Pression",
+        humidityLabel: "Humidité",
+        altitudeLabel: "Altitude",
+        eyeToNockLabel: "Œil à encoche",
+        nockToRiserLabel: "Encoche à poignée",
+        distMinLabel: "Dist. min",
+        distMaxLabel: "Dist. max",
+        stepLabel: "Pas",
+        distHeader: "Dist",
+        dropHeader: "Chute",
+        riserHeader: "Viseur",
+        energyHeader: "E",
+        velocityHeader: "V",
+        unit_mass_metric: "g",
+        unit_mass_imperial: "gr",
+        unit_length_metric: "m",
+        unit_length_imperial: "in",
+        unit_diameter_metric: "mm",
+        unit_diameter_imperial: "in",
+        unit_drawForce: "lb",
+        unit_speed_metric: "m/s",
+        unit_speed_imperial: "ft/s",
+        unit_energy_metric: "J",
+        unit_energy_imperial: "ft·lb",
+        unit_temp_metric: "°C",
+        unit_temp_imperial: "°F",
+        unit_pressure_metric: "hPa",
+        unit_pressure_imperial: "inHg",
+        unit_altitude_metric: "m",
+        unit_altitude_imperial: "ft",
+        unit_distance_metric: "m",
+        unit_distance_imperial: "yd",
+        unit_drop_metric: "cm",
+        unit_drop_imperial: "in",
+        unit_projection_metric: "cm",
+        unit_projection_imperial: "in",
+        unit_balance_metric: "m",
+        unit_balance_imperial: "in",
+        exportPDF: "📄 Exporter PDF",
+        exportCSV: "📊 Exporter CSV",
+        copy: "📋 Copier",
+        download: "💾 Télécharger",
+        close: "Fermer",
+        axis_distance: (unit) => `Distance (${unit})`,
+        axis_height: (unit) => `Hauteur (${unit})`,
+        axis_speed: (unit) => `Vitesse (${unit})`,
+        axis_energy: () => `Énergie (%)`,
+        axis_drop: (unit) => `Chute (${unit})`
+    },
+    de: {
+        appTitle: "🏹 Ballistik-Simulator",
+        subtitle: "Adaptives RK4 • Visier-Generierung • Vollständige Analyse",
+        credits: "von Cesare Pagura & Claude",
+        simulate: "🚀 SIMULIEREN",
+        simulating: "⏳ Berechnung...",
+        aimAngle: "Zielwinkel",
+        v0: "v₀",
+        flightTime: "Zeit",
+        maxHeight: "H max",
+        drop: "Abfall",
+        maxRange: "Max. Reichweite",
+        tabTrajectory: "📈 Flugbahn",
+        tabVelocity: "⚡ Geschwindigkeit",
+        tabEnergy: "🔋 Energie",
+        tabDrop: "📉 Abfall",
+        tabSight: "🎯 Visier",
+        real: "Real",
+        ideal: "Ideal (ohne Widerstand)",
+        sightLine: "Ziellinie",
+        total: "Gesamt",
+        target: "Ziel",
+        impact: "Einschlag",
+        center: "✓ Volltreffer!",
+        arrowPanel: "🎯 Pfeil",
+        bowPanel: "🏹 Bogen",
+        targetPanel: "🎯 Ziel",
+        archerPanel: "👤 Schützen-Biometrie",
+        environmentPanel: "🌍 Umgebung",
+        sightPanel: "🔍 Visier-Geometrie",
+        massLabel: "Masse",
+        lengthLabel: "Länge",
+        diameterLabel: "Durchmesser",
+        spineLabel: "Spine",
+        tipWeightLabel: "Spitzengewicht",
+        balanceLabel: "Gleichgewichtspunkt",
+        tipTypeLabel: "Spitzentyp",
+        fletchingLabel: "Befiederung",
+        drawForceLabel: "Zugkraft",
+        drawLengthLabel: "Auszugslänge",
+        braceHeightLabel: "Standhöhe",
+        nockingOffsetLabel: "Nocken-Versatz",
+        bowTypeLabel: "Typ",
+        efficiencyLabel: "Effizienz",
+        distanceLabel: "Entfernung",
+        heightLabel: "Höhe",
+        useMeasuredV0: "Gemessene v₀ verwenden",
+        measuredV0Label: "v₀ (m/s)",
+        neutralHeightLabel: "Neutrale Abschusshöhe",
+        pelvisHeightLabel: "Beckenhöhe",
+        anchorLengthLabel: "Schulter zu Anker",
+        posturalCorrectionLabel: "Haltungskorrektur",
+        posturalInfo: "Die Haltungskorrektur passt die Abschusshöhe basierend auf dem Schießwinkel an (Beckenrotation in 'T'-Position)",
+        windLabel: "Wind",
+        tempLabel: "Temperatur",
+        pressureLabel: "Druck",
+        humidityLabel: "Feuchtigkeit",
+        altitudeLabel: "Höhe",
+        eyeToNockLabel: "Auge zu Nocke",
+        nockToRiserLabel: "Nocke zu Griff",
+        distMinLabel: "Min. Dist.",
+        distMaxLabel: "Max. Dist.",
+        stepLabel: "Schritt",
+        distHeader: "Dist",
+        dropHeader: "Abfall",
+        riserHeader: "Visier",
+        energyHeader: "E",
+        velocityHeader: "V",
+        unit_mass_metric: "g",
+        unit_mass_imperial: "gr",
+        unit_length_metric: "m",
+        unit_length_imperial: "in",
+        unit_diameter_metric: "mm",
+        unit_diameter_imperial: "in",
+        unit_drawForce: "lb",
+        unit_speed_metric: "m/s",
+        unit_speed_imperial: "ft/s",
+        unit_energy_metric: "J",
+        unit_energy_imperial: "ft·lb",
+        unit_temp_metric: "°C",
+        unit_temp_imperial: "°F",
+        unit_pressure_metric: "hPa",
+        unit_pressure_imperial: "inHg",
+        unit_altitude_metric: "m",
+        unit_altitude_imperial: "ft",
+        unit_distance_metric: "m",
+        unit_distance_imperial: "yd",
+        unit_drop_metric: "cm",
+        unit_drop_imperial: "in",
+        unit_projection_metric: "cm",
+        unit_projection_imperial: "in",
+        unit_balance_metric: "m",
+        unit_balance_imperial: "in",
+        exportPDF: "📄 PDF exportieren",
+        exportCSV: "📊 CSV exportieren",
+        copy: "📋 Kopieren",
+        download: "💾 Herunterladen",
+        close: "Schließen",
+        axis_distance: (unit) => `Entfernung (${unit})`,
+        axis_height: (unit) => `Höhe (${unit})`,
+        axis_speed: (unit) => `Geschwindigkeit (${unit})`,
+        axis_energy: () => `Energie (%)`,
+        axis_drop: (unit) => `Abfall (${unit})`
+    }
+};
+
+// =============================================================================
+// CONTEXT I18N
+// =============================================================================
+const I18nContext = createContext(null);
+
+function useI18n() {
+    return useContext(I18nContext);
+}
+
+// Conversioni metrico ↔ imperiale
+const conversions = {
+    mass_to_imperial: (g) => g * 15.4323584,
+    mass_to_metric: (gr) => gr / 15.4323584,
+    length_to_imperial: (m) => m * 39.3700787,
+    length_to_metric: (in_) => in_ / 39.3700787,
+    diameter_to_imperial: (mm) => mm * 0.0393700787,
+    diameter_to_metric: (in_) => in_ / 0.0393700787,
+    speed_to_imperial: (mps) => mps * 3.2808399,
+    speed_to_metric: (fts) => fts / 3.2808399,
+    energy_to_imperial: (j) => j * 0.737562149,
+    energy_to_metric: (ftlbf) => ftlbf / 0.737562149,
+    temp_to_imperial: (c) => c * 9/5 + 32,
+    temp_to_metric: (f) => (f - 32) * 5/9,
+    pressure_to_imperial: (hpa) => hpa * 0.029529987,
+    pressure_to_metric: (inhg) => inhg / 0.029529987,
+    altitude_to_imperial: (m) => m * 3.2808399,
+    altitude_to_metric: (ft) => ft / 3.2808399,
+    distance_to_imperial: (m) => m * 1.09361,
+    distance_to_metric: (yd) => yd / 1.09361,
+    drop_to_imperial: (cm) => cm * 0.393700787,
+    drop_to_metric: (inch) => inch / 0.393700787,
+    balance_to_imperial: (m) => m * 39.3700787,
+    balance_to_metric: (in_) => in_ / 39.3700787,
+};
+
+function I18nProvider({ children }) {
+    const [language, setLanguage] = useState('it');
+    const [unitSystem, setUnitSystem] = useState('metric');
+
+    const t = useCallback((key, ...args) => {
+        let str = translations[language][key] || key;
+        if (typeof str === 'function') return str(...args);
+        return str;
+    }, [language]);
+
+    const convertFromMetric = useCallback((value, quantity) => {
+        if (unitSystem === 'metric') return value;
+        if (!quantity) return value;
+        const conv = conversions[`${quantity}_to_imperial`];
+        return conv ? conv(value) : value;
+    }, [unitSystem]);
+
+    const convertToMetric = useCallback((value, quantity) => {
+        if (unitSystem === 'metric') return value;
+        if (!quantity) return value;
+        const conv = conversions[`${quantity}_to_metric`];
+        return conv ? conv(value) : value;
+    }, [unitSystem]);
+
+    const value = { language, setLanguage, unitSystem, setUnitSystem, t, convertFromMetric, convertToMetric };
+    return e(I18nContext.Provider, { value }, children);
+}
+
+// =============================================================================
+// FUNZIONI FISICHE (IDENTICHE ALL'ORIGINALE, RESTANO IN METRICO)
+// =============================================================================
+function calculateAirDensity(tempC, pressureHpa, humidityPct) {
+    const tempK = tempC + 273.15;
+    const pSat = 610.78 * Math.exp(17.2694 * tempC / (tempC + 238.3));
+    const pVapor = (humidityPct / 100.0) * pSat / 100.0;
+    const pDry = pressureHpa - pVapor;
+    return (pDry * 100) / (PHYSICAL_CONSTANTS.R_SPECIFIC_AIR * tempK) + (pVapor * 100) / (461.5 * tempK);
+}
+function reynoldsNumber(v, diameterMm, params) {
+    let correctedTemp = params.airTemperature;
+    let correctedPressure = params.airPressure;
+    if (params.altitude && params.altitude > 0) {
+        correctedPressure = params.airPressure * Math.pow(1 - 0.0065 * params.altitude / 288.15, 5.255);
+        correctedTemp = params.airTemperature - 0.0065 * params.altitude;
+    }
+    const rho = calculateAirDensity(correctedTemp, correctedPressure, params.humidity);
+    const mu = PHYSICAL_CONSTANTS.AIR_VISCOSITY * (correctedTemp + 273.15) / 291.15;
+    return (rho * v * (diameterMm / 1000.0)) / mu;
+}
+function calculateFOC(length, balancePoint) {
+    const centroGeometrico = length / 2;
+    return ((balancePoint - centroGeometrico) / length) * 100;
+}
+function calculateSpineStabilityFactor(spine, arrowLength, params) {
+    const drawWeightLb = params.drawForce || 40;
+    const arrowLengthInches = arrowLength * 39.37;
+    const pointWeight = params.tipWeight || 100;
+    const lengthFactor = 1 + (arrowLengthInches - 28) * 0.035;
+    const pointFactor = 1 + (pointWeight - 100) * 0.002;
+    const idealSpine = (26000 / drawWeightLb) * lengthFactor * pointFactor;
+    const spineRatio = spine / idealSpine;
+    let oscillationAmplitude = 0;
+    if (spineRatio > 1.10) {
+        const excess = spineRatio - 1.10;
+        oscillationAmplitude = excess * 80;
+    } else if (spineRatio < 0.90) {
+        const deficit = 0.90 - spineRatio;
+        oscillationAmplitude = deficit * 100;
+    } else if (spineRatio > 1.0) {
+        oscillationAmplitude = (spineRatio - 1.0) * 30;
+    } else {
+        oscillationAmplitude = (1.0 - spineRatio) * 40;
+    }
+    let dragIncreaseFactor = 1.0;
+    if (oscillationAmplitude > 0) {
+        const areaEffect = 1 + oscillationAmplitude * 0.008;
+        let turbulenceEffect = 1.0;
+        if (oscillationAmplitude > 8) {
+            const turbulenceProgress = Math.min(1.0, (oscillationAmplitude - 8) / 17);
+            turbulenceEffect = 1 + turbulenceProgress * 0.6;
+        }
+        dragIncreaseFactor = areaEffect * turbulenceEffect;
+    }
+    return Math.min(dragIncreaseFactor, 2.5);
+}
+function enhancedDragCoefficient(v, params, attackAngleDeg = 0) {
+    const Re = reynoldsNumber(v, params.diameter, params);
+    let baseCd;
+    if (Re < 1e3) baseCd = 2.2;
+    else if (Re < 2e3) baseCd = 2.2 - 0.8 * (Re - 1e3) / 1e3;
+    else if (Re < 1e4) baseCd = 1.4 - 0.15 * (Re - 2e3) / 8e3;
+    else if (Re < 3e4) baseCd = 1.25 + 0.95 * (Re - 1e4) / 2e4;
+    else if (Re < 1e5) baseCd = 2.2 - 0.8 * (Re - 3e4) / 7e4;
+    else if (Re < 3e5) baseCd = 1.4 - 0.2 * (Re - 1e5) / 2e5;
+    else baseCd = 1.2;
+    const gammaRad = Math.abs(attackAngleDeg) * Math.PI / 180;
+    const angleFactor = 1 + 2.5 * Math.pow(gammaRad, 1.5) + 0.8 * Math.pow(gammaRad, 3);
+    const tipFactor = TIP_TYPE_CD_FACTOR[params.tipType] || 1.0;
+    const fletchingFactor = FLETCHING_TYPE_CD_FACTOR[params.fletchingType] || 1.0;
+    const spineFactor = calculateSpineStabilityFactor(params.spine, params.length, params);
+    let correctedTemp = params.airTemperature;
+    let correctedPressure = params.airPressure;
+    if (params.altitude && params.altitude > 0) {
+        correctedPressure = params.airPressure * Math.pow(1 - 0.0065 * params.altitude / 288.15, 5.255);
+        correctedTemp = params.airTemperature - 0.0065 * params.altitude;
+    }
+    const currentDensity = calculateAirDensity(correctedTemp, correctedPressure, params.humidity);
+    const densityFactor = 1 + 0.003 * (currentDensity / PHYSICAL_CONSTANTS.AIR_DENSITY_STP - 1);
+    let focFactor = 1.0;
+    if (params.balancePoint && params.length) {
+        const foc = calculateFOC(params.length, params.balancePoint);
+        if (foc > 15) focFactor = 1 + 0.015 * (foc - 15);
+        else if (foc < 7) focFactor = 1 + 0.025 * (7 - foc);
+        if (foc < 0) focFactor = 1 + 0.05 * Math.abs(foc);
+    }
+    return baseCd * angleFactor * tipFactor * fletchingFactor * densityFactor * spineFactor * focFactor;
+}
+function calculateVelocity(params) {
+    if (params.useMeasuredV0 && params.v0 > 0) return params.v0;
+    const massKg = params.mass / 1000.0;
+    const forceN = params.drawForce * 4.44822;
+    const drawM = Math.max(0.001, params.drawLength - params.braceHeight);
+    const E_stored = params.efficiency * 0.5 * forceN * drawM;
+    let correctedTemp = params.airTemperature;
+    let correctedPressure = params.airPressure;
+    if (params.altitude && params.altitude > 0) {
+        correctedPressure = params.airPressure * Math.pow(1 - 0.0065 * params.altitude / 288.15, 5.255);
+        correctedTemp = params.airTemperature - 0.0065 * params.altitude;
+    }
+    const airDensityRatio = calculateAirDensity(correctedTemp, correctedPressure, params.humidity) / PHYSICAL_CONSTANTS.AIR_DENSITY_STP;
+    const initialDragCorrection = 1 - 0.015 * (airDensityRatio - 1);
+    const v0 = Math.sqrt(Math.max(1.0, 2 * E_stored / massKg)) * initialDragCorrection;
+    return Math.min(v0, 150.0);
+}
+// RK4 (identico all'originale)
+function systemDerivatives(state, params, angleDeg, withDrag, withWind) {
+    const [x, y, vx, vy] = state;
+    const v = Math.sqrt(vx * vx + vy * vy);
+    let ax = 0, ay = -PHYSICAL_CONSTANTS.G;
+    if (withDrag && v > 0.1) {
+        const flightAngle = Math.atan2(vy, vx) * 180 / Math.PI;
+        const angleOfAttack = flightAngle - angleDeg;
+        const Cd = enhancedDragCoefficient(v, params, angleOfAttack);
+        let correctedTemp = params.airTemperature;
+        let correctedPressure = params.airPressure;
+        if (params.altitude && params.altitude > 0) {
+            correctedPressure = params.airPressure * Math.pow(1 - 0.0065 * params.altitude / 288.15, 5.255);
+            correctedTemp = params.airTemperature - 0.0065 * params.altitude;
+        }
+        const rho = calculateAirDensity(correctedTemp, correctedPressure, params.humidity);
+        const A = Math.PI * Math.pow(params.diameter / 2000, 2);
+        const massKg = params.mass / 1000;
+        const dragForce = 0.5 * rho * v * v * Cd * A;
+        ax -= (dragForce / massKg) * (vx / v);
+        ay -= (dragForce / massKg) * (vy / v);
+    }
+    if (withWind && params.windSpeed !== 0) {
+        const massKg = params.mass / 1000;
+        const A = Math.PI * Math.pow(params.diameter / 2000, 2);
+        let correctedTemp = params.airTemperature;
+        let correctedPressure = params.airPressure;
+        if (params.altitude && params.altitude > 0) {
+            correctedPressure = params.airPressure * Math.pow(1 - 0.0065 * params.altitude / 288.15, 5.255);
+            correctedTemp = params.airTemperature - 0.0065 * params.altitude;
+        }
+        const rho = calculateAirDensity(correctedTemp, correctedPressure, params.humidity);
+        const CdWind = 1.1;
+        const windForce = 0.5 * rho * CdWind * A * params.windSpeed * Math.abs(params.windSpeed);
+        ax += windForce / massKg;
+    }
+    return [vx, vy, ax, ay];
+}
+function rk4Step(state, dt, params, angleDeg, withDrag, withWind) {
+    const k1 = systemDerivatives(state, params, angleDeg, withDrag, withWind);
+    const s2 = state.map((s, i) => s + k1[i] * dt / 2);
+    const k2 = systemDerivatives(s2, params, angleDeg, withDrag, withWind);
+    const s3 = state.map((s, i) => s + k2[i] * dt / 2);
+    const k3 = systemDerivatives(s3, params, angleDeg, withDrag, withWind);
+    const s4 = state.map((s, i) => s + k3[i] * dt);
+    const k4 = systemDerivatives(s4, params, angleDeg, withDrag, withWind);
+    return state.map((s, i) => s + (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]) * dt / 6);
+}
+function integrateTrajectory(angleDeg, params, withDrag = true, withWind = true, maxRange = 150) {
+    const v0 = calculateVelocity(params);
+    const angleRad = angleDeg * Math.PI / 180;
+    let state = [0, params.launchHeightNeutral, v0 * Math.cos(angleRad), v0 * Math.sin(angleRad)];
+    const X = [state[0]], Y = [state[1]], Vx = [state[2]], Vy = [state[3]], T = [0];
+    const minY = Math.min(-150, (params.targetHeight || 0) - 50);
+    let t = 0, dt = 0.001;
+    while (state[0] < maxRange && state[1] > minY && t < 30) {
+        const fullStep = rk4Step(state, dt, params, angleDeg, withDrag, withWind);
+        const halfStep1 = rk4Step(state, dt/2, params, angleDeg, withDrag, withWind);
+        const halfStep2 = rk4Step(halfStep1, dt/2, params, angleDeg, withDrag, withWind);
+        const error = Math.max(Math.abs(fullStep[0] - halfStep2[0]), Math.abs(fullStep[1] - halfStep2[1]));
+        if (error < 1e-6) {
+            state = halfStep2;
+            t += dt;
+            X.push(state[0]); Y.push(state[1]); Vx.push(state[2]); Vy.push(state[3]); T.push(t);
+            if (error < 1e-7) dt = Math.min(dt * 1.5, 0.02);
+        } else {
+            dt = Math.max(dt * 0.5, 1e-8);
+        }
+    }
+    return { X, Y, Vx, Vy, T, v0, flightTime: t, maxHeight: Math.max(...Y) };
+}
+function interpolateTrajectory(X, Y, targetX) {
+    for (let i = 0; i < X.length - 1; i++) {
+        if (X[i] <= targetX && X[i+1] >= targetX) {
+            const t = (targetX - X[i]) / (X[i+1] - X[i]);
+            return Y[i] + t * (Y[i+1] - Y[i]);
+        }
+    }
+    return Y[Y.length - 1];
+}
+function findOptimalAngle(params) {
+    const targetX = params.targetDistance, targetY = params.targetHeight;
+    let bestAngle = 0, bestError = Infinity;
+    const approxAngle = Math.atan2(targetY, targetX) * 180 / Math.PI;
+    const angleMin = Math.max(-60, approxAngle - 30);
+    const angleMax = Math.min(70, approxAngle + 40);
+    for (let a = angleMin; a <= angleMax; a += 1) {
+        const traj = integrateTrajectory(a, params, true, true, targetX * 1.5);
+        if (traj.X[traj.X.length - 1] < targetX * 0.9) continue;
+        const yAtTarget = interpolateTrajectory(traj.X, traj.Y, targetX);
+        const error = Math.abs(yAtTarget - targetY);
+        if (error < bestError) { bestError = error; bestAngle = a; }
+    }
+    for (let delta = 0.5; delta >= 0.01; delta /= 2) {
+        for (const dir of [-1, 1]) {
+            const testAngle = bestAngle + dir * delta;
+            const traj = integrateTrajectory(testAngle, params, true, true, targetX * 1.5);
+            if (traj.X[traj.X.length - 1] < targetX * 0.9) continue;
+            const yAtTarget = interpolateTrajectory(traj.X, traj.Y, targetX);
+            const error = Math.abs(yAtTarget - targetY);
+            if (error < bestError) { bestError = error; bestAngle = testAngle; }
+        }
+    }
+    return [bestAngle, bestError];
+}
+function calculatePosturalLaunchHeight(angleRad, params) {
+    const neutralHeight = params.launchHeightNeutral;
+    const pelvisHeight = params.pelvisHeight || 1.05;
+    const anchorLength = params.anchorLength || 0.72;
+    const pivotHeight = neutralHeight - pelvisHeight;
+    const armDisplacementY = anchorLength * Math.sin(angleRad);
+    const finalHeight = pivotHeight + pelvisHeight + armDisplacementY;
+    return Math.max(0.1, finalHeight);
+}
+function calculateMaxRange(params) {
+    const targetY = params.targetHeight || 0;
+    let bestAngle = 35, bestRange = 0;
+    for (let angle = 20; angle <= 50; angle += 1) {
+        const traj = integrateTrajectory(angle, params, true, true, 500);
+        let maxHeightIdx = 0;
+        for (let i = 1; i < traj.Y.length; i++) {
+            if (traj.Y[i] > traj.Y[maxHeightIdx]) maxHeightIdx = i;
+        }
+        for (let i = maxHeightIdx; i < traj.Y.length - 1; i++) {
+            if (traj.Y[i] >= targetY && traj.Y[i + 1] <= targetY) {
+                const t = (targetY - traj.Y[i]) / (traj.Y[i + 1] - traj.Y[i]);
+                const rangeAtTarget = traj.X[i] + t * (traj.X[i + 1] - traj.X[i]);
+                if (rangeAtTarget > bestRange) { bestRange = rangeAtTarget; bestAngle = angle; }
+                break;
+            }
+        }
+    }
+    for (let delta = 0.5; delta >= 0.1; delta /= 2) {
+        for (const dir of [-1, 1]) {
+            const testAngle = bestAngle + dir * delta;
+            const traj = integrateTrajectory(testAngle, params, true, true, 500);
+            let maxHeightIdx = 0;
+            for (let i = 1; i < traj.Y.length; i++) {
+                if (traj.Y[i] > traj.Y[maxHeightIdx]) maxHeightIdx = i;
+            }
+            for (let i = maxHeightIdx; i < traj.Y.length - 1; i++) {
+                if (traj.Y[i] >= targetY && traj.Y[i + 1] <= targetY) {
+                    const t = (targetY - traj.Y[i]) / (traj.Y[i + 1] - traj.Y[i]);
+                    const rangeAtTarget = traj.X[i] + t * (traj.X[i + 1] - traj.X[i]);
+                    if (rangeAtTarget > bestRange) { bestRange = rangeAtTarget; bestAngle = testAngle; }
+                    break;
+                }
+            }
+        }
+    }
+    return { maxRange: Math.round(bestRange * 10) / 10, optimalAngle: Math.round(bestAngle * 10) / 10 };
+}
+function calculateSightProjection(distance, dropM, params) {
+    const horizontalDistance = distance;
+    const verticalOffset = dropM;
+    const projectionM = horizontalDistance * (params.eyeToNock + verticalOffset) / (params.nockToRiser + horizontalDistance);
+    const projectionCm = projectionM * 100.0 - verticalOffset * 100.0;
+    return projectionCm;
+}
+function generateSightMarks(distances, trajectory, params, optimalAngle, nockingAngleOffset = 0) {
+    const massKg = params.mass / 1000;
+    return distances.map(d => {
+        const yAtD = interpolateTrajectory(trajectory.X, trajectory.Y, d);
+        const ySight = params.launchHeightNeutral + Math.tan(optimalAngle * Math.PI / 180) * d;
+        const dropM = ySight - yAtD;
+        const proj = calculateSightProjection(d, dropM, params);
+        const vxAtD = interpolateTrajectory(trajectory.X, trajectory.Vx, d);
+        const vyAtD = interpolateTrajectory(trajectory.X, trajectory.Vy, d);
+        const vAtD = Math.sqrt(vxAtD * vxAtD + vyAtD * vyAtD);
+        return {
+            distance: d,
+            dropCm: Math.round(dropM * 100 * 10) / 10,
+            projectionCm: Math.round(proj * 100) / 100,
+            energy: Math.round(0.5 * massKg * vAtD * vAtD * 10) / 10,
+            velocity: Math.round(vAtD * 10) / 10
+        };
+    });
+}
+
+// =============================================================================
+// COMPONENTI UI ADATTATI PER I18N E UNITÀ
+// =============================================================================
+
+// Campo dedicato per l'offset di incocco: sempre in mm, con pulsanti +/-
+// NON usa il sistema di conversione unità: internamente è già in mm e rimane tale.
+function NockingOffsetField({ value, onChange }) {
+    const { t } = useI18n();
+    // value è in mm (es. 5 = 5mm sopra la perpendicolare)
+    const step = 1; // mm
+    const min = -10;
+    const max = 20;
+    const [display, setDisplay] = useState(String(value));
+    useEffect(() => { setDisplay(String(value)); }, [value]);
+    const commit = (v) => {
+        let n = parseFloat(v);
+        if (isNaN(n)) { setDisplay(String(value)); return; }
+        n = Math.max(min, Math.min(max, Math.round(n)));
+        onChange(n);
+        setDisplay(String(n));
+    };
+    return e('div', { className: 'form-group' },
+        e('label', { className: 'label' }, `${t('nockingOffsetLabel')} (mm)`),
+        e('div', { style: { display: 'flex', alignItems: 'center', gap: '4px' } },
+            e('button', {
+                onClick: () => { const nv = Math.max(min, value - step); onChange(nv); setDisplay(String(nv)); },
+                style: { padding: '2px 8px', borderRadius: '4px', border: '1px solid #475569', background: '#334155', color: '#fff', cursor: 'pointer', fontSize: '1rem', lineHeight: '1.4', flexShrink: 0 }
+            }, '−'),
+            e('input', {
+                type: 'text', inputMode: 'decimal',
+                value: display,
+                onChange: ev => setDisplay(ev.target.value),
+                onBlur: ev => commit(ev.target.value),
+                className: 'input-field',
+                style: { textAlign: 'center', flex: 1 }
+            }),
+            e('button', {
+                onClick: () => { const nv = Math.min(max, value + step); onChange(nv); setDisplay(String(nv)); },
+                style: { padding: '2px 8px', borderRadius: '4px', border: '1px solid #475569', background: '#334155', color: '#fff', cursor: 'pointer', fontSize: '1rem', lineHeight: '1.4', flexShrink: 0 }
+            }, '+')
+        )
+    );
+}
+
+function InputFieldWithUnits({ labelKey, valueMetric, onChange, min, max, step, disabled, quantity }) {
+    const { t, unitSystem, convertFromMetric, convertToMetric } = useI18n();
+
+    // draft: stringa grezza visibile nel campo. Aggiornata solo localmente durante
+    // la digitazione; il valore metrico globale viene committato solo su blur/Enter.
+    const [draft, setDraft] = useState(() => convertFromMetric(valueMetric, quantity).toFixed(2));
+    const inputRef = React.useRef(null);
+    const committedMetricRef = React.useRef(valueMetric);
+
+    // Sincronizza il draft quando il valore esterno cambia (cambio unità, reset, ecc.)
+    // ma solo se il campo NON è attivo -- per non interrompere la digitazione in corso.
+    useEffect(() => {
+        if (inputRef.current && inputRef.current === document.activeElement) return;
+        committedMetricRef.current = valueMetric;
+        setDraft(convertFromMetric(valueMetric, quantity).toFixed(2));
+    }, [valueMetric, unitSystem, quantity]);
+
+    // Durante la digitazione aggiorna solo il draft locale, MAI lo stato globale.
+    const handleChange = (ev) => {
+        setDraft(ev.target.value);
+    };
+
+    // Commit: valida, converte in metrico, clamp, chiama onChange una sola volta.
+    const commit = (raw) => {
+        const trimmed = (raw || '').trim();
+        if (trimmed === '' || trimmed === '-' || trimmed === '.' || trimmed === '-.') {
+            // Valore incompleto: ripristina l'ultimo valore valido
+            setDraft(convertFromMetric(committedMetricRef.current, quantity).toFixed(2));
+            return;
+        }
+        const num = parseFloat(trimmed);
+        if (isNaN(num)) {
+            setDraft(convertFromMetric(committedMetricRef.current, quantity).toFixed(2));
+            return;
+        }
+        let metricVal = convertToMetric(num, quantity);
+        if (!isNaN(min) && metricVal < min) metricVal = min;
+        if (!isNaN(max) && metricVal > max) metricVal = max;
+        committedMetricRef.current = metricVal;
+        setDraft(convertFromMetric(metricVal, quantity).toFixed(2));
+        if (metricVal !== valueMetric) onChange(metricVal);
+    };
+
+    const handleBlur  = (ev) => commit(ev.target.value);
+    const handleKeyDown = (ev) => { if (ev.key === 'Enter') { commit(ev.target.value); ev.target.blur(); } };
+
+    let unitLabel = '';
+    if (quantity === 'mass') unitLabel = unitSystem === 'metric' ? t('unit_mass_metric') : t('unit_mass_imperial');
+    else if (quantity === 'length') unitLabel = unitSystem === 'metric' ? t('unit_length_metric') : t('unit_length_imperial');
+    else if (quantity === 'diameter') unitLabel = unitSystem === 'metric' ? t('unit_diameter_metric') : t('unit_diameter_imperial');
+    else if (quantity === 'drawForce') unitLabel = t('unit_drawForce');
+    else if (quantity === 'speed') unitLabel = unitSystem === 'metric' ? t('unit_speed_metric') : t('unit_speed_imperial');
+    else if (quantity === 'energy') unitLabel = unitSystem === 'metric' ? t('unit_energy_metric') : t('unit_energy_imperial');
+    else if (quantity === 'temperature') unitLabel = unitSystem === 'metric' ? t('unit_temp_metric') : t('unit_temp_imperial');
+    else if (quantity === 'pressure') unitLabel = unitSystem === 'metric' ? t('unit_pressure_metric') : t('unit_pressure_imperial');
+    else if (quantity === 'altitude') unitLabel = unitSystem === 'metric' ? t('unit_altitude_metric') : t('unit_altitude_imperial');
+    else if (quantity === 'distance') unitLabel = unitSystem === 'metric' ? t('unit_distance_metric') : t('unit_distance_imperial');
+    else if (quantity === 'balance') unitLabel = unitSystem === 'metric' ? t('unit_balance_metric') : t('unit_balance_imperial');
+    else unitLabel = '';
+    return e('div', { className: 'form-group' },
+        e('label', { className: 'label' }, `${t(labelKey)}${unitLabel ? ` (${unitLabel})` : ''}`),
+        e('input', {
+            ref: inputRef,
+            type: 'text',
+            inputMode: 'decimal',
+            value: draft,
+            onChange: handleChange,
+            onBlur: handleBlur,
+            onKeyDown: handleKeyDown,
+            disabled,
+            className: 'input-field',
+            style: { textAlign: 'right' }
+        })
+    );
+}
+
+function SelectField({ labelKey, value, onChange, options }) {
+    const { t } = useI18n();
+    return e('div', { className: 'form-group' },
+        e('label', { className: 'label' }, t(labelKey)),
+        e('select', { value, onChange: ev => onChange(ev.target.value), className: 'input-field' },
+            options.map(opt => e('option', { key: opt, value: opt }, opt))
+        )
+    );
+}
+
+function MetricCard({ labelKey, value }) {
+    const { t } = useI18n();
+    return e('div', { className: 'metric-card panel' },
+        e('p', { className: 'title label' }, t(labelKey)),
+        e('p', { className: 'value' }, value)
+    );
+}
+
+function CollapsiblePanel({ titleKey, children, defaultOpen = true }) {
+    const { t } = useI18n();
+    const [isOpen, setIsOpen] = useState(defaultOpen);
+    return e('div', { className: 'collapsible-panel' },
+        e('button', { onClick: () => setIsOpen(!isOpen), className: 'panel-header' }, t(titleKey), e('span', { className: 'arrow' }, isOpen ? '▼' : '▶')),
+        isOpen && e('div', { className: 'panel-body panel' }, children)
+    );
+}
+
+// SVGChart modificato per accettare testo diretto degli assi con unità
+function SVGChart({ data, xKey, yKeys, colors, xLabelText, yLabelText, xDomain, yDomain, width = 600, height = 280, showDots, refPoints, darkMode, yKeyLabels }) {
+    const [tooltip, setTooltip] = useState(null);
+    const svgRef = React.useRef(null);
+    const margin = { top: 20, right: 20, bottom: 40, left: 55 };
+    const w = width - margin.left - margin.right;
+    const h = height - margin.top - margin.bottom;
+    if (!data || data.length === 0) return null;
+    const xMin = xDomain ? xDomain[0] : Math.min(...data.map(d => d[xKey]));
+    const xMax = xDomain ? xDomain[1] : Math.max(...data.map(d => d[xKey]));
+    const allY = data.flatMap(d => yKeys.map(k => d[k]).filter(v => v !== undefined && !isNaN(v)));
+    let yMin, yMax;
+    if (yDomain) { yMin = yDomain[0]; yMax = yDomain[1]; }
+    else {
+        const dataYMin = Math.min(...allY);
+        const dataYMax = Math.max(...allY);
+        const range = dataYMax - dataYMin;
+        const margin_y = range * 0.1 || 1;
+        yMin = dataYMin - margin_y;
+        yMax = dataYMax + margin_y;
+    }
+    if (yMax === yMin) { yMax = yMin + 1; }
+    if (xMax === xMin) return null;
+    const scaleX = x => margin.left + (x - xMin) / (xMax - xMin) * w;
+    const scaleY = y => margin.top + h - (y - yMin) / (yMax - yMin) * h;
+    const unscaleX = px => xMin + (px - margin.left) / w * (xMax - xMin);
+    const gridColor = darkMode ? '#374151' : '#e5e7eb';
+    const textColor = darkMode ? '#9ca3af' : '#4b5563';
+    const axisColor = darkMode ? '#4b5563' : '#9ca3af';
+    function generateTicks(min, max, targetCount = 6) {
+        const range = max - min;
+        const roughStep = range / targetCount;
+        const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+        let step;
+        if (roughStep / magnitude < 1.5) step = magnitude;
+        else if (roughStep / magnitude < 3) step = 2 * magnitude;
+        else if (roughStep / magnitude < 7) step = 5 * magnitude;
+        else step = 10 * magnitude;
+        const ticks = [];
+        let tick = Math.ceil(min / step) * step;
+        while (tick <= max) {
+            ticks.push(Math.round(tick * 1000) / 1000);
+            tick += step;
+        }
+        return ticks;
+    }
+    const xTicks = generateTicks(xMin, xMax, 8);
+    const yTicks = generateTicks(yMin, yMax, 6);
+    const handleMouseMove = (evt) => {
+        if (!svgRef.current) return;
+        const rect = svgRef.current.getBoundingClientRect();
+        const mouseX = evt.clientX - rect.left;
+        const scaleFactor = rect.width / width;
+        const dataX = unscaleX(mouseX / scaleFactor);
+        let closestPoint = null;
+        let minDist = Infinity;
+        data.forEach(d => {
+            const dist = Math.abs(d[xKey] - dataX);
+            if (dist < minDist) { minDist = dist; closestPoint = d; }
+        });
+        const svgMouseX = mouseX / scaleFactor;
+        if (closestPoint && svgMouseX >= margin.left && svgMouseX <= margin.left + w) {
+            const lineXinSvg = scaleX(closestPoint[xKey]);
+            const lineXinCss = lineXinSvg * scaleFactor;
+            setTooltip({ x: lineXinCss, xSvg: lineXinSvg, data: closestPoint, scaleFactor });
+        } else setTooltip(null);
+    };
+    const handleMouseLeave = () => setTooltip(null);
+    const defaultLabels = yKeys.reduce((acc, k, i) => { acc[k] = k; return acc; }, {});
+    const labels = yKeyLabels || defaultLabels;
+    return e('div', { style: { position: 'relative', overflow: 'hidden' } },
+        e('svg', { ref: svgRef, width: '100%', height: height, viewBox: `0 0 ${width} ${height}`, style: { display: 'block', cursor: 'crosshair' }, onMouseMove: handleMouseMove, onMouseLeave: handleMouseLeave },
+            ...xTicks.map(x => e('line', { key: 'gx'+x, x1: scaleX(x), x2: scaleX(x), y1: margin.top, y2: margin.top + h, stroke: gridColor, strokeDasharray: '3,3' })),
+            ...yTicks.map(y => e('line', { key: 'gy'+y, x1: margin.left, x2: margin.left + w, y1: scaleY(y), y2: scaleY(y), stroke: gridColor, strokeDasharray: '3,3' })),
+            e('line', { x1: margin.left, x2: margin.left + w, y1: margin.top + h, y2: margin.top + h, stroke: axisColor, strokeWidth: 1 }),
+            e('line', { x1: margin.left, x2: margin.left, y1: margin.top, y2: margin.top + h, stroke: axisColor, strokeWidth: 1 }),
+            (yMin < 0 && yMax > 0) ? e('line', { x1: margin.left, x2: margin.left + w, y1: scaleY(0), y2: scaleY(0), stroke: axisColor, strokeWidth: 1, strokeDasharray: '5,5' }) : null,
+            ...xTicks.map(x => e('text', { key: 'tx'+x, x: scaleX(x), y: margin.top + h + 18, fill: textColor, fontSize: 10, textAnchor: 'middle' }, Math.round(x * 10) / 10)),
+            ...yTicks.map(y => e('text', { key: 'ty'+y, x: margin.left - 8, y: scaleY(y) + 4, fill: textColor, fontSize: 10, textAnchor: 'end' }, Math.abs(y) >= 100 ? Math.round(y) : Math.round(y * 10) / 10)),
+            e('text', { x: margin.left + w/2, y: height - 5, fill: textColor, fontSize: 11, textAnchor: 'middle' }, xLabelText),
+            e('text', { x: 14, y: margin.top + h/2, fill: textColor, fontSize: 11, textAnchor: 'middle', transform: `rotate(-90, 14, ${margin.top + h/2})` }, yLabelText),
+            ...yKeys.map((yKey, idx) => {
+                const validData = data.filter(d => d[yKey] !== undefined && !isNaN(d[yKey]));
+                if (validData.length < 2) return null;
+                const points = validData.map(d => `${scaleX(d[xKey])},${scaleY(d[yKey])}`).join(' ');
+                const dashArray = idx === 1 ? '5,5' : idx === 2 ? '3,3' : 'none';
+                return e('polyline', { key: yKey, points, fill: 'none', stroke: colors[idx], strokeWidth: idx === 0 ? 2.5 : 1.5, strokeDasharray: dashArray });
+            }),
+            tooltip ? e('line', { x1: tooltip.xSvg, x2: tooltip.xSvg, y1: margin.top, y2: margin.top + h, stroke: darkMode ? '#818cf8' : '#4f46e5', strokeWidth: 1, strokeDasharray: '4,4' }) : null,
+            tooltip ? yKeys.map((yKey, idx) => {
+                const val = tooltip.data[yKey];
+                if (val === undefined || isNaN(val)) return null;
+                return e('circle', { key: 'cursor-'+yKey, cx: tooltip.xSvg, cy: scaleY(val), r: 5, fill: colors[idx], stroke: '#fff', strokeWidth: 2 });
+            }) : null,
+            showDots ? data.map((d, i) => yKeys.map((yKey, idx) => d[yKey] !== undefined && !isNaN(d[yKey]) ? e('circle', { key: `dot-${i}-${idx}`, cx: scaleX(d[xKey]), cy: scaleY(d[yKey]), r: 4, fill: colors[idx], stroke: darkMode ? '#1e293b' : '#fff', strokeWidth: 1 }) : null)) : null,
+            refPoints ? refPoints.map((p, i) => e('circle', { key: 'ref'+i, cx: scaleX(p.x), cy: scaleY(p.y), r: p.r || 6, fill: p.color, stroke: '#fff', strokeWidth: 2 })) : null
+        ),
+        tooltip && e('div', { style: { position: 'absolute', left: (tooltip.x) + 'px', top: margin.top * tooltip.scaleFactor + 5 + 'px', width: '130px', background: darkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)', border: `1px solid ${darkMode ? '#475569' : '#d1d5db'}`, borderRadius: '6px', padding: '8px 12px', fontSize: '11px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', pointerEvents: 'none', zIndex: 10 } },
+            e('div', { style: { fontWeight: 'bold', marginBottom: '4px', color: darkMode ? '#818cf8' : '#4f46e5' } }, `${xLabelText.split(' ')[0]}: ${Math.round(tooltip.data[xKey] * 100) / 100}`),
+            ...yKeys.map((yKey, idx) => {
+                const val = tooltip.data[yKey];
+                if (val === undefined || isNaN(val)) return null;
+                return e('div', { key: yKey, style: { display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' } },
+                    e('span', { style: { width: '10px', height: '3px', backgroundColor: colors[idx], borderRadius: '1px' } }),
+                    e('span', { style: { color: darkMode ? '#cbd5e1' : '#374151' } }, `${labels[yKey]}: `),
+                    e('span', { style: { fontWeight: 'bold', color: colors[idx] } }, Math.round(val * 100) / 100)
+                );
+            })
+        )
+    );
+}
+
+function SightScaleViz({ sightMarks, eyeToNock, nockToRiser, darkMode }) {
+    const { t, unitSystem, convertFromMetric } = useI18n();
+    if (!sightMarks || !sightMarks.length) return null;
+    let projections = sightMarks.map(m => m.projectionCm);
+    if (unitSystem === 'imperial') {
+        projections = projections.map(cm => conversions.drop_to_imperial(cm));
+    }
+    const minP = Math.min(...projections, 0);
+    const maxP = Math.max(...projections, 0);
+    const padding = 3;
+    const rangeMin = minP - padding;
+    const rangeMax = maxP + padding;
+    const range = rangeMax - rangeMin || 1;
+    const toPercent = val => ((val - rangeMin) / range) * 100;
+    const laserDist = 30;
+    const laserProjM = laserDist * eyeToNock / (nockToRiser + laserDist);
+    let laserProjCm = laserProjM * 100;
+    if (unitSystem === 'imperial') laserProjCm = conversions.drop_to_imperial(laserProjCm);
+    return e('div', { className: 'sight-scale' },
+        e('div', { className: 'sight-scale-inner' },
+            e('div', { className: 'sight-bar' }),
+            e('div', { className: 'zero-line', style: { bottom: toPercent(0) + '%' } }, e('span', { className: 'zero-label' }, '0 cm')),
+            sightMarks.map((m, i) => {
+                let proj = m.projectionCm;
+                if (unitSystem === 'imperial') proj = conversions.drop_to_imperial(proj);
+                const dist = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+                return e('div', { key: m.distance, className: 'sight-mark', style: { bottom: toPercent(proj) + '%', width: 20, backgroundColor: `hsl(${200 + i * 15}, 70%, ${darkMode ? 55 : 45}%)` } },
+                    e('span', { className: 'sight-mark-label ' + (i % 2 === 0 ? 'left' : 'right'), style: { color: darkMode ? '#cbd5e1' : '#374151' } }, Math.round(dist) + (unitSystem === 'metric' ? 'm' : 'yd'))
+                );
+            }),
+            e('div', { className: 'laser-dot', style: { bottom: toPercent(laserProjCm) + '%' } },
+                e('span', { className: 'laser-label' }, `Laser ${unitSystem === 'metric' ? '30m' : '33yd'}`)
+            )
+        )
+    );
+}
+
+// =============================================================================
+// COMPONENTE PRINCIPALE (con I18nProvider e adattamento delle unità)
+// =============================================================================
+function BallisticSimulator() {
+    const [darkMode, setDarkMode] = useState(true);
+    const { t, unitSystem, convertFromMetric, convertToMetric, language, setLanguage, setUnitSystem } = useI18n();
+    // Parametri (sempre metrici internamente)
+    const [mass, setMass] = useState(28);
+    const [length, setLength] = useState(0.76);
+    const [diameter, setDiameter] = useState(6.5);
+    const [spine, setSpine] = useState(700);
+    const [tipWeight, setTipWeight] = useState(100);
+    const [balancePoint, setBalancePoint] = useState(0.42);
+    const [tipType, setTipType] = useState("Standard");
+    const [fletchingType, setFletchingType] = useState("Grande 3x5");
+    const [drawForce, setDrawForce] = useState(42);
+    const [drawLength, setDrawLength] = useState(0.71);
+    const [braceHeight, setBraceHeight] = useState(0.19);
+    const [bowType, setBowType] = useState("ricurvo");
+    const [efficiency, setEfficiency] = useState(0.84);
+    const [targetDistance, setTargetDistance] = useState(40);
+    const [targetHeight, setTargetHeight] = useState(1.4);
+    const [useMeasuredV0, setUseMeasuredV0] = useState(false);
+    const [v0Measured, setV0Measured] = useState(58);
+    const [launchHeightNeutral, setLaunchHeightNeutral] = useState(1.55);
+    const [anchorLength, setAnchorLength] = useState(0.72);
+    const [pelvisHeight, setPelvisHeight] = useState(1.05);
+    const [usePosturalCorrection, setUsePosturalCorrection] = useState(true);
+    const [windSpeed, setWindSpeed] = useState(0);
+    const [airTemperature, setAirTemperature] = useState(18);
+    const [airPressure, setAirPressure] = useState(1013);
+    const [humidity, setHumidity] = useState(55);
+    const [altitude, setAltitude] = useState(150);
+    const [eyeToNock, setEyeToNock] = useState(0.12);
+    const [nockToRiser, setNockToRiser] = useState(0.68);
+    const [nockingOffset, setNockingOffset] = useState(5);
+    const [distMin, setDistMin] = useState(10);
+    const [distMax, setDistMax] = useState(60);
+    const [distStep, setDistStep] = useState(5);
+    const [isSimulating, setIsSimulating] = useState(false);
+    const [results, setResults] = useState(null);
+    const [activeTab, setActiveTab] = useState('trajectory');
+    const [showCSVModal, setShowCSVModal] = useState(false);
+    const [csvContent, setCsvContent] = useState('');
+
+    const calculatedV0 = useMemo(() => {
+        const params = { mass, length, spine, diameter, tipWeight, balancePoint, tipType, fletchingType, drawForce, drawLength, braceHeight, efficiency, bowType, launchHeightNeutral, targetDistance, targetHeight, useMeasuredV0, v0: v0Measured, windSpeed, airTemperature, airPressure, humidity, altitude, eyeToNock, nockToRiser };
+        return calculateVelocity(params);
+    }, [mass, drawForce, drawLength, braceHeight, efficiency, useMeasuredV0, v0Measured, airTemperature, airPressure, humidity, altitude]);
+    const calculatedFOC = useMemo(() => calculateFOC(length, balancePoint), [length, balancePoint]);
+
+    // Preparazione dati convertiti per i grafici in base al sistema di unità
+    const imperialChartData = useMemo(() => {
+        if (!results?.chartData) return null;
+        if (unitSystem === 'metric') return results.chartData;
+        return results.chartData.map(d => ({
+            x: conversions.distance_to_imperial(d.x),
+            yReal: conversions.length_to_imperial(d.yReal),
+            yIdeal: conversions.length_to_imperial(d.yIdeal),
+            ySight: conversions.length_to_imperial(d.ySight),
+            vTotal: conversions.speed_to_imperial(d.vTotal),
+            vx: conversions.speed_to_imperial(d.vx),
+            vy: conversions.speed_to_imperial(d.vy),
+            energyPct: d.energyPct
+        }));
+    }, [results, unitSystem]);
+
+    const imperialDropData = useMemo(() => {
+        if (!results?.dropData) return null;
+        if (unitSystem === 'metric') return results.dropData;
+        // dropData va convertita: x in distanza imperiale, drop in pollici
+        return results.dropData.map(d => ({
+            x: conversions.distance_to_imperial(d.x),
+            drop: conversions.drop_to_imperial(d.drop)
+        }));
+    }, [results, unitSystem]);
+
+    const runSimulation = useCallback(() => {
+        setIsSimulating(true);
+        setTimeout(() => {
+            try {
+                const baseParams = { 
+                    mass, length, spine, diameter, tipWeight, balancePoint, tipType, fletchingType, 
+                    drawForce, drawLength, braceHeight, efficiency, bowType, 
+                    launchHeightNeutral, targetDistance, targetHeight, 
+                    useMeasuredV0, v0: v0Measured, windSpeed, airTemperature, 
+                    airPressure, humidity, altitude, eyeToNock, nockToRiser, nockingOffset,
+                    anchorLength, pelvisHeight
+                };
+                const nockingOffsetM = nockingOffset / 1000;
+                const restToCockDistance = length * 0.9;
+                const nockingAngleOffset = Math.atan2(nockingOffsetM, restToCockDistance) * 180 / Math.PI;
+                let finalLaunchHeight = launchHeightNeutral;
+                let effectiveLaunchAngle;
+                if (usePosturalCorrection) {
+                    let currentHeight = launchHeightNeutral;
+                    for (let iter = 0; iter < 8; iter++) {
+                        const iterParams = { ...baseParams, launchHeightNeutral: currentHeight };
+                        const [angleEffective] = findOptimalAngle(iterParams);
+                        const angleRad = angleEffective * Math.PI / 180;
+                        const newHeight = calculatePosturalLaunchHeight(angleRad, baseParams);
+                        if (Math.abs(newHeight - currentHeight) < 0.001) {
+                            effectiveLaunchAngle = angleEffective;
+                            finalLaunchHeight = newHeight;
+                            break;
+                        }
+                        currentHeight = newHeight;
+                        effectiveLaunchAngle = angleEffective;
+                        finalLaunchHeight = newHeight;
+                    }
+                } else {
+                    const [angleEffective] = findOptimalAngle(baseParams);
+                    effectiveLaunchAngle = angleEffective;
+                    finalLaunchHeight = launchHeightNeutral;
+                }
+                const aimAngle = effectiveLaunchAngle - nockingAngleOffset;
+                const params = { ...baseParams, launchHeightNeutral: finalLaunchHeight };
+                const maxRange = Math.max(distMax, targetDistance) * 1.3;
+                const trajectory = integrateTrajectory(effectiveLaunchAngle, params, true, true, maxRange);
+                const idealTrajectory = integrateTrajectory(effectiveLaunchAngle, params, false, false, maxRange);
+                const maxRangeInfo = calculateMaxRange(params);
+                const distances = [];
+                for (let d = distMin; d <= distMax; d += distStep) distances.push(d);
+                const sightMarks = generateSightMarks(distances, trajectory, params, aimAngle, nockingAngleOffset);
+                const impactHeight = interpolateTrajectory(trajectory.X, trajectory.Y, targetDistance);
+                const chartData = [];
+                const step = Math.max(1, Math.floor(trajectory.X.length / 100));
+                for (let i = 0; i < trajectory.X.length; i += step) {
+                    const x = trajectory.X[i];
+                    if (x > targetDistance * 1.05) continue;
+                    const yReal = trajectory.Y[i];
+                    const ySight = finalLaunchHeight + Math.tan(aimAngle * Math.PI / 180) * x;
+                    const yIdeal = interpolateTrajectory(idealTrajectory.X, idealTrajectory.Y, x);
+                    const vx = trajectory.Vx[i], vy = trajectory.Vy[i];
+                    const vTotal = Math.sqrt(vx * vx + vy * vy);
+                    const energyPct = (vTotal * vTotal) / (trajectory.v0 * trajectory.v0) * 100;
+                    chartData.push({ x: Math.round(x * 100) / 100, yReal: Math.round(yReal * 100) / 100, yIdeal: Math.round(yIdeal * 100) / 100, ySight: Math.round(ySight * 100) / 100, vTotal: Math.round(vTotal * 10) / 10, vx: Math.round(vx * 10) / 10, vy: Math.round(vy * 10) / 10, energyPct: Math.round(energyPct * 10) / 10 });
+                }
+                const dropData = sightMarks.map(m => ({ x: m.distance, drop: m.dropCm }));
+                const targetDrop = sightMarks.find(m => m.distance === targetDistance)?.dropCm || Math.round((finalLaunchHeight + Math.tan(aimAngle * Math.PI / 180) * targetDistance - impactHeight) * 1000) / 10;
+                const posturalDeltaHeight = usePosturalCorrection ? (finalLaunchHeight - launchHeightNeutral) : 0;
+                setResults({ trajectory, idealTrajectory, aimAngle, effectiveLaunchAngle, nockingAngleOffset, sightMarks, chartData, dropData, impactHeight, targetDrop, maxRangeInfo, finalLaunchHeight, posturalDeltaHeight });
+            } catch (err) { console.error(err); alert("Errore: " + err.message); }
+            finally { setIsSimulating(false); }
+        }, 50);
+    }, [mass, length, spine, diameter, tipWeight, balancePoint, tipType, fletchingType, drawForce, drawLength, braceHeight, efficiency, bowType, targetDistance, targetHeight, useMeasuredV0, v0Measured, windSpeed, airTemperature, airPressure, humidity, altitude, eyeToNock, nockToRiser, nockingOffset, launchHeightNeutral, anchorLength, pelvisHeight, usePosturalCorrection, distMin, distMax, distStep]);
+
+    const exportCSV = useCallback(() => {
+        if (!results?.sightMarks?.length) return;
+        let csv = `${t('distHeader')} (${unitSystem === 'metric' ? 'm' : 'yd'}),${t('dropHeader')} (${unitSystem === 'metric' ? 'cm' : 'in'}),${t('riserHeader')} (${unitSystem === 'metric' ? 'cm' : 'in'}),${t('energyHeader')} (${unitSystem === 'metric' ? 'J' : 'ft·lb'}),${t('velocityHeader')} (${unitSystem === 'metric' ? 'm/s' : 'ft/s'})\n`;
+        results.sightMarks.forEach(m => {
+            let dist = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+            let drop = unitSystem === 'metric' ? m.dropCm : conversions.drop_to_imperial(m.dropCm);
+            let proj = unitSystem === 'metric' ? m.projectionCm : conversions.drop_to_imperial(m.projectionCm);
+            let energy = unitSystem === 'metric' ? m.energy : conversions.energy_to_imperial(m.energy);
+            let vel = unitSystem === 'metric' ? m.velocity : conversions.speed_to_imperial(m.velocity);
+            csv += `${dist.toFixed(1)},${drop.toFixed(1)},${proj.toFixed(1)},${energy.toFixed(1)},${vel.toFixed(1)}\n`;
+        });
+        setCsvContent(csv);
+        setShowCSVModal(true);
+        if (navigator.clipboard) navigator.clipboard.writeText(csv).catch(() => {});
+    }, [results, unitSystem, t]);
+
+    const downloadCSV = useCallback(() => {
+        if (!csvContent) return;
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `sight_scale_${targetDistance}${unitSystem === 'metric' ? 'm' : 'yd'}.csv`;
+        link.click();
+    }, [csvContent, targetDistance, unitSystem]);
+
+    const exportPDF = useCallback(() => {
+        if (!results?.sightMarks?.length || typeof jspdf === 'undefined') { alert('PDF non disponibile.'); return; }
+        const { jsPDF } = jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const pageWidth = 210, pageHeight = 297, margin = 15;
+        const colWidth = (pageWidth - 2 * margin) / 5;
+        // Titolo PDF: usiamo testo ASCII puro (niente emoji) perché jsPDF/Helvetica non supporta Unicode esteso
+        const pdfTitle = { it: 'Scala Mirino', en: 'Sight Scale', es: 'Escala de Visor', fr: 'Echelle de Viseur', de: 'Visierskala' };
+        doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text(pdfTitle[language] || 'Sight Scale', pageWidth / 2, 20, { align: 'center' });
+        doc.setFontSize(10); doc.setFont('helvetica', 'normal');
+        let v0Display = results.trajectory.v0;
+        if (unitSystem === 'imperial') v0Display = conversions.speed_to_imperial(v0Display);
+        doc.text(`${t('v0')}: ${v0Display.toFixed(1)} ${unitSystem === 'metric' ? 'm/s' : 'ft/s'}  |  ${t('aimAngle')}: ${results.aimAngle.toFixed(2)}°  |  ${t('distanceLabel')}: ${unitSystem === 'metric' ? targetDistance : conversions.distance_to_imperial(targetDistance).toFixed(1)} ${unitSystem === 'metric' ? 'm' : 'yd'}`, pageWidth / 2, 28, { align: 'center' });
+        const today = new Date().toLocaleDateString(language === 'it' ? 'it-IT' : 'en-US');
+        doc.setFontSize(8); doc.text(`Generated on ${today}`, pageWidth / 2, 34, { align: 'center' });
+        let y = 45;
+        doc.setFillColor(230,240,250); doc.rect(margin, y-5, pageWidth-2*margin, 8, 'F');
+        doc.setFontSize(9); doc.setFont('helvetica', 'bold');
+        doc.text(t('distHeader'), margin + colWidth*0.5, y, { align: 'center' });
+        doc.text(t('dropHeader'), margin + colWidth*1.5, y, { align: 'center' });
+        doc.text(t('riserHeader'), margin + colWidth*2.5, y, { align: 'center' });
+        doc.text(t('energyHeader'), margin + colWidth*3.5, y, { align: 'center' });
+        doc.text(t('velocityHeader'), margin + colWidth*4.5, y, { align: 'center' });
+        y += 3; doc.setDrawColor(200,200,200); doc.line(margin, y, pageWidth-margin, y); y += 6;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+        results.sightMarks.forEach((m, i) => {
+            let dist = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+            let drop = unitSystem === 'metric' ? m.dropCm : conversions.drop_to_imperial(m.dropCm);
+            let proj = unitSystem === 'metric' ? m.projectionCm : conversions.drop_to_imperial(m.projectionCm);
+            let energy = unitSystem === 'metric' ? m.energy : conversions.energy_to_imperial(m.energy);
+            let vel = unitSystem === 'metric' ? m.velocity : conversions.speed_to_imperial(m.velocity);
+            if (m.distance === targetDistance) { doc.setFillColor(255,255,200); doc.rect(margin, y-4, pageWidth-2*margin, 6, 'F'); doc.setFont('helvetica', 'bold'); }
+            else if (i % 2 === 0) { doc.setFillColor(248,248,248); doc.rect(margin, y-4, pageWidth-2*margin, 6, 'F'); }
+            doc.text(dist.toFixed(1), margin + colWidth*0.5, y, { align: 'center' });
+            doc.text(drop.toFixed(1), margin + colWidth*1.5, y, { align: 'center' });
+            doc.text(proj.toFixed(1), margin + colWidth*2.5, y, { align: 'center' });
+            doc.text(energy.toFixed(1), margin + colWidth*3.5, y, { align: 'center' });
+            doc.text(vel.toFixed(1), margin + colWidth*4.5, y, { align: 'center' });
+            if (m.distance === targetDistance) doc.setFont('helvetica', 'normal');
+            y += 6;
+        });
+        doc.line(margin, y-2, pageWidth-margin, y-2);
+        y += 15;
+        doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.text('Sight Visual Scale', pageWidth / 2, y, { align: 'center' });
+        y += 10;
+        const scaleX = pageWidth / 2;
+        let projections = results.sightMarks.map(m => m.projectionCm);
+        if (unitSystem === 'imperial') projections = projections.map(cm => conversions.drop_to_imperial(cm));
+        const minP = Math.min(...projections, 0), maxP = Math.max(...projections, 0);
+        const rangeMin = minP - 1, rangeMax = maxP + 1, rangeCm = rangeMax - rangeMin || 1;
+        const MM_PER_CM = 10;
+        const scaleHeight = rangeCm * MM_PER_CM;
+        const scaleTop = y;
+        const toY = (cm) => scaleTop + (rangeMax - cm) * MM_PER_CM;
+        doc.setDrawColor(100,100,100); doc.setLineWidth(1); doc.line(scaleX, scaleTop, scaleX, scaleTop + scaleHeight);
+        const zeroY = toY(0); doc.setDrawColor(200,0,0); doc.setLineWidth(0.5); doc.line(scaleX-15, zeroY, scaleX+15, zeroY);
+        doc.setFontSize(7); doc.setTextColor(200,0,0); doc.text('0 cm', scaleX+18, zeroY+1);
+        doc.setTextColor(0,0,0);
+        results.sightMarks.forEach((m, i) => {
+            let proj = unitSystem === 'metric' ? m.projectionCm : conversions.drop_to_imperial(m.projectionCm);
+            let markY = toY(proj);
+            doc.setDrawColor(50,100,150); doc.setLineWidth(0.8); doc.line(scaleX-8, markY, scaleX+8, markY);
+            doc.setFontSize(7);
+            let dist = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+            if (i % 2 === 0) doc.text(`${dist.toFixed(0)}${unitSystem === 'metric' ? 'm' : 'yd'}`, scaleX-12, markY+1, { align: 'right' });
+            else doc.text(`${dist.toFixed(0)}${unitSystem === 'metric' ? 'm' : 'yd'}`, scaleX+12, markY+1);
+        });
+        const laserDist = 30;
+        const laserProjM = laserDist * eyeToNock / (nockToRiser + laserDist);
+        let laserProjCm = laserProjM * 100;
+        if (unitSystem === 'imperial') laserProjCm = conversions.drop_to_imperial(laserProjCm);
+        const laserY = toY(laserProjCm);
+        doc.setFillColor(34,197,94); doc.setDrawColor(34,197,94); doc.circle(scaleX, laserY, 2, 'F');
+        doc.setFontSize(7); doc.setTextColor(34,197,94); doc.text(`Laser ${unitSystem === 'metric' ? '30m' : '33yd'} (${laserProjCm.toFixed(1)} ${unitSystem === 'metric' ? 'cm' : 'in'})`, scaleX+12, laserY+1);
+        doc.setTextColor(0,0,0);
+
+        // ── Righelli di riferimento 5 cm – per verificare che la stampa sia al 100% ──
+        // Usano la stessa scala 1:1 (MM_PER_CM = 10 mm/cm) già definita sopra
+        const zeroYpos = toY(0);
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.setFontSize(6);
+        doc.setTextColor(80, 80, 80);
+
+        // Righello VERTICALE a sinistra: 5 cm verso l'alto dallo zero-mirino
+        const leftRulerX = scaleX - 35;
+        const rulerLength = 5 * MM_PER_CM; // 50 mm = 5 cm
+        doc.line(leftRulerX, zeroYpos, leftRulerX, zeroYpos - rulerLength);
+        for (let i = 0; i <= 5; i++) {
+            const tickY = zeroYpos - i * MM_PER_CM;
+            const tw = i % 5 === 0 ? 3 : 2;
+            doc.line(leftRulerX - tw, tickY, leftRulerX + tw, tickY);
+            doc.text(String(i), leftRulerX - 5, tickY + 1, { align: 'right' });
+        }
+        doc.text('cm', leftRulerX - 5, zeroYpos - rulerLength - 4, { align: 'right' });
+
+        // Righello ORIZZONTALE a destra: 5 cm verso destra dallo zero-mirino
+        const rightRulerStartX = scaleX + 25;
+        doc.line(rightRulerStartX, zeroYpos, rightRulerStartX + rulerLength, zeroYpos);
+        for (let i = 0; i <= 5; i++) {
+            const tickX = rightRulerStartX + i * MM_PER_CM;
+            const th = i % 5 === 0 ? 3 : 2;
+            doc.line(tickX, zeroYpos - th, tickX, zeroYpos + th);
+            doc.text(String(i), tickX, zeroYpos + 6, { align: 'center' });
+        }
+        doc.text('cm', rightRulerStartX + rulerLength + 4, zeroYpos + 1);
+
+        // Nota di scala
+        doc.setFontSize(7); doc.setTextColor(100,100,100);
+        doc.text('Scala 1:1 - Stampare al 100% / Print at 100%', pageWidth / 2, scaleTop + scaleHeight + 18, { align: 'center' });
+        doc.setTextColor(0,0,0);
+
+        doc.save(`sight_scale_${targetDistance}${unitSystem === 'metric' ? 'm' : 'yd'}.pdf`);
+    }, [results, targetDistance, eyeToNock, nockToRiser, unitSystem, language, t]);
+
+    const themeClass = darkMode ? 'theme-dark' : 'theme-light';
+
+    // Costruzione testi assi con unità
+    const distanceUnit = unitSystem === 'metric' ? t('unit_distance_metric') : t('unit_distance_imperial');
+    const heightUnit = unitSystem === 'metric' ? t('unit_length_metric') : t('unit_length_imperial');
+    const speedUnit = unitSystem === 'metric' ? t('unit_speed_metric') : t('unit_speed_imperial');
+    const dropUnit = unitSystem === 'metric' ? t('unit_drop_metric') : t('unit_drop_imperial');
+
+    const xLabelDistance = t('axis_distance', distanceUnit);
+    const yLabelHeight = t('axis_height', heightUnit);
+    const yLabelSpeed = t('axis_speed', speedUnit);
+    const yLabelEnergy = t('axis_energy');
+    const yLabelDrop = t('axis_drop', dropUnit);
+
+    return e('div', { className: `app-container ${themeClass}` },
+        e('div', { className: 'header' },
+            e('button', { className: 'theme-toggle', onClick: () => setDarkMode(!darkMode) }, darkMode ? '☀️' : '🌙'),
+            // Barra lingue — sinistra
+            e('div', { className: 'lang-unit-bar' },
+                e('button', { onClick: () => setLanguage('it'), style: { fontWeight: language === 'it' ? 'bold' : 'normal', opacity: language === 'it' ? 1 : 0.7 } }, '🇮🇹'),
+                e('button', { onClick: () => setLanguage('en'), style: { fontWeight: language === 'en' ? 'bold' : 'normal', opacity: language === 'en' ? 1 : 0.7 } }, '🇬🇧'),
+                e('button', { onClick: () => setLanguage('es'), style: { fontWeight: language === 'es' ? 'bold' : 'normal', opacity: language === 'es' ? 1 : 0.7 } }, '🇪🇸'),
+                e('button', { onClick: () => setLanguage('fr'), style: { fontWeight: language === 'fr' ? 'bold' : 'normal', opacity: language === 'fr' ? 1 : 0.7 } }, '🇫🇷'),
+                e('button', { onClick: () => setLanguage('de'), style: { fontWeight: language === 'de' ? 'bold' : 'normal', opacity: language === 'de' ? 1 : 0.7 } }, '🇩🇪')
+            ),
+            // Toggle m/yd — destra (accanto al toggle tema)
+            e('div', { className: 'unit-toggle-bar' },
+                e('button', { onClick: () => setUnitSystem('metric'), style: { fontWeight: unitSystem === 'metric' ? 'bold' : 'normal', opacity: unitSystem === 'metric' ? 1 : 0.7 } }, 'm'),
+                e('button', { onClick: () => setUnitSystem('imperial'), style: { fontWeight: unitSystem === 'imperial' ? 'bold' : 'normal', opacity: unitSystem === 'imperial' ? 1 : 0.7 } }, 'yd')
+            ),
+            e('h1', null, t('appTitle')),
+            e('p', { className: 'subtitle' }, t('subtitle')),
+            e('p', { className: 'credits' }, t('credits'))
+        ),
+        e('div', { className: 'main-layout' },
+            e('div', { className: 'params-grid' },
+                e(CollapsiblePanel, { titleKey: 'arrowPanel' },
+                    e(InputFieldWithUnits, { labelKey: 'massLabel', valueMetric: mass, onChange: setMass, min: 8, max: 80, step: 0.5, quantity: 'mass' }),
+                    e(InputFieldWithUnits, { labelKey: 'lengthLabel', valueMetric: length, onChange: setLength, min: 0.5, max: 1.2, step: 0.01, quantity: 'length' }),
+                    e(InputFieldWithUnits, { labelKey: 'diameterLabel', valueMetric: diameter, onChange: setDiameter, min: 4, max: 12, step: 0.1, quantity: 'diameter' }),
+                    e(InputFieldWithUnits, { labelKey: 'spineLabel', valueMetric: spine, onChange: setSpine, min: 200, max: 1500, step: 25, quantity: null }),
+                    e(InputFieldWithUnits, { labelKey: 'tipWeightLabel', valueMetric: tipWeight, onChange: setTipWeight, min: 50, max: 300, step: 5, quantity: 'mass' }),
+                    e(InputFieldWithUnits, { labelKey: 'balanceLabel', valueMetric: balancePoint, onChange: setBalancePoint, min: 0.2, max: 0.6, step: 0.01, quantity: 'balance' }),
+                    e(SelectField, { labelKey: 'tipTypeLabel', value: tipType, onChange: setTipType, options: Object.keys(TIP_TYPE_CD_FACTOR) }),
+                    e(SelectField, { labelKey: 'fletchingLabel', value: fletchingType, onChange: setFletchingType, options: Object.keys(FLETCHING_TYPE_CD_FACTOR) })
+                ),
+                e(CollapsiblePanel, { titleKey: 'bowPanel' },
+                    e(InputFieldWithUnits, { labelKey: 'drawForceLabel', valueMetric: drawForce, onChange: setDrawForce, min: 20, max: 100, step: 1, quantity: 'drawForce' }),
+                    e(InputFieldWithUnits, { labelKey: 'drawLengthLabel', valueMetric: drawLength, onChange: setDrawLength, min: 0.55, max: 0.85, step: 0.01, quantity: 'length' }),
+                    e(InputFieldWithUnits, { labelKey: 'braceHeightLabel', valueMetric: braceHeight, onChange: setBraceHeight, min: 0.1, max: 0.25, step: 0.01, quantity: 'length' }),
+                    e(NockingOffsetField, { value: nockingOffset, onChange: setNockingOffset }),
+                    e(SelectField, { labelKey: 'bowTypeLabel', value: bowType, onChange: v => { setBowType(v); setEfficiency(BOW_TYPE_EFFICIENCY[v] || 0.8); }, options: Object.keys(BOW_TYPE_EFFICIENCY) }),
+                    e(InputFieldWithUnits, { labelKey: 'efficiencyLabel', valueMetric: efficiency, onChange: setEfficiency, min: 0.6, max: 0.95, step: 0.01, quantity: null })
+                ),
+                e(CollapsiblePanel, { titleKey: 'targetPanel' },
+                    e(InputFieldWithUnits, { labelKey: 'distanceLabel', valueMetric: targetDistance, onChange: setTargetDistance, min: 5, max: 100, step: 1, quantity: 'distance' }),
+                    e(InputFieldWithUnits, { labelKey: 'heightLabel', valueMetric: targetHeight, onChange: setTargetHeight, min: -100, max: 100, step: 0.1, quantity: 'length' }),
+                    e('div', { className: 'checkbox-group' }, e('input', { type: 'checkbox', checked: useMeasuredV0, onChange: ev => setUseMeasuredV0(ev.target.checked) }), e('span', { className: 'label' }, t('useMeasuredV0')) ),
+                    useMeasuredV0 && e(InputFieldWithUnits, { labelKey: 'measuredV0Label', valueMetric: v0Measured, onChange: setV0Measured, min: 20, max: 120, step: 1, quantity: 'speed' }),
+                    e('div', { className: 'info-box' }, `${t('v0')}: `, e('span', { className: 'value' }, (unitSystem === 'metric' ? calculatedV0.toFixed(1) : conversions.speed_to_imperial(calculatedV0).toFixed(1)), ` ${unitSystem === 'metric' ? 'm/s' : 'ft/s'}`), '  FOC: ', e('span', { className: 'value-blue' }, calculatedFOC.toFixed(1), '%'))
+                ),
+                e(CollapsiblePanel, { titleKey: 'archerPanel', defaultOpen: false },
+                    e(InputFieldWithUnits, { labelKey: 'neutralHeightLabel', valueMetric: launchHeightNeutral, onChange: setLaunchHeightNeutral, min: 1.0, max: 2.0, step: 0.01, quantity: 'length' }),
+                    e(InputFieldWithUnits, { labelKey: 'pelvisHeightLabel', valueMetric: pelvisHeight, onChange: setPelvisHeight, min: 0.5, max: 1.3, step: 0.01, quantity: 'length' }),
+                    e(InputFieldWithUnits, { labelKey: 'anchorLengthLabel', valueMetric: anchorLength, onChange: setAnchorLength, min: 0.5, max: 0.9, step: 0.01, quantity: 'length' }),
+                    e('div', { className: 'checkbox-group' }, e('input', { type: 'checkbox', checked: usePosturalCorrection, onChange: ev => setUsePosturalCorrection(ev.target.checked) }), e('span', { className: 'label' }, t('posturalCorrectionLabel')) ),
+                    e('div', { className: 'info-text', style: { fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' } }, t('posturalInfo'))
+                ),
+                e(CollapsiblePanel, { titleKey: 'environmentPanel', defaultOpen: false },
+                    e(InputFieldWithUnits, { labelKey: 'windLabel', valueMetric: windSpeed, onChange: setWindSpeed, min: -15, max: 15, step: 0.5, quantity: 'speed' }),
+                    e(InputFieldWithUnits, { labelKey: 'tempLabel', valueMetric: airTemperature, onChange: setAirTemperature, min: -20, max: 45, step: 1, quantity: 'temperature' }),
+                    e(InputFieldWithUnits, { labelKey: 'pressureLabel', valueMetric: airPressure, onChange: setAirPressure, min: 950, max: 1050, step: 1, quantity: 'pressure' }),
+                    e(InputFieldWithUnits, { labelKey: 'humidityLabel', valueMetric: humidity, onChange: setHumidity, min: 10, max: 95, step: 5, quantity: null }),
+                    e(InputFieldWithUnits, { labelKey: 'altitudeLabel', valueMetric: altitude, onChange: setAltitude, min: 0, max: 3000, step: 50, quantity: 'altitude' })
+                ),
+                e('div', { className: 'col-span-2' },
+                    e(CollapsiblePanel, { titleKey: 'sightPanel', defaultOpen: false },
+                        e('div', { className: 'inner-grid-2' },
+                            e(InputFieldWithUnits, { labelKey: 'eyeToNockLabel', valueMetric: eyeToNock, onChange: setEyeToNock, min: 0.08, max: 0.3, step: 0.005, quantity: 'length' }),
+                            e(InputFieldWithUnits, { labelKey: 'nockToRiserLabel', valueMetric: nockToRiser, onChange: setNockToRiser, min: 0.4, max: 1.2, step: 0.01, quantity: 'length' }),
+                            e(InputFieldWithUnits, { labelKey: 'distMinLabel', valueMetric: distMin, onChange: setDistMin, min: 5, max: 50, step: 5, quantity: 'distance' }),
+                            e(InputFieldWithUnits, { labelKey: 'distMaxLabel', valueMetric: distMax, onChange: setDistMax, min: 20, max: 150, step: 5, quantity: 'distance' }),
+                            e(InputFieldWithUnits, { labelKey: 'stepLabel', valueMetric: distStep, onChange: setDistStep, min: 1, max: 10, step: 1, quantity: 'distance' })
+                        )
+                    )
+                ),
+                e('div', { className: 'col-span-2' },
+                    e('button', { onClick: runSimulation, disabled: isSimulating, className: 'btn-simulate' }, isSimulating ? t('simulating') : t('simulate'))
+                )
+            ),
+            e('div', { className: 'results-column' },
+                results ? e('div', null,
+                    e('div', { className: 'metrics-grid' },
+                        e(MetricCard, { labelKey: 'aimAngle', value: results.aimAngle.toFixed(2) + '°' }),
+                        e(MetricCard, { labelKey: 'v0', value: (unitSystem === 'metric' ? results.trajectory.v0.toFixed(1) : conversions.speed_to_imperial(results.trajectory.v0).toFixed(1)) + ` ${unitSystem === 'metric' ? 'm/s' : 'ft/s'}` }),
+                        e(MetricCard, { labelKey: 'flightTime', value: results.trajectory.flightTime.toFixed(2) + ' s' }),
+                        e(MetricCard, { labelKey: 'maxHeight', value: (unitSystem === 'metric' ? results.trajectory.maxHeight.toFixed(2) : conversions.length_to_imperial(results.trajectory.maxHeight).toFixed(2)) + ` ${unitSystem === 'metric' ? 'm' : 'in'}` }),
+                        e(MetricCard, { labelKey: 'drop', value: (unitSystem === 'metric' ? results.targetDrop.toFixed(1) : conversions.drop_to_imperial(results.targetDrop).toFixed(1)) + ` ${unitSystem === 'metric' ? 'cm' : 'in'}` }),
+                        e(MetricCard, { labelKey: 'maxRange', value: (unitSystem === 'metric' ? results.maxRangeInfo.maxRange.toFixed(1) : conversions.distance_to_imperial(results.maxRangeInfo.maxRange).toFixed(1)) + `${unitSystem === 'metric' ? 'm' : 'yd'} @${results.maxRangeInfo.optimalAngle}°` })
+                    ),
+                    (results.nockingAngleOffset !== 0 || results.posturalDeltaHeight !== 0) && e('div', { className: 'panel', style: { padding: '8px 12px', marginBottom: '12px', fontSize: '0.8rem' } },
+                        results.nockingAngleOffset !== 0 && e('div', { style: { marginBottom: '4px' } }, `📐 Offset incocco: ${(results.nockingAngleOffset > 0 ? '+' : '') + results.nockingAngleOffset.toFixed(3)}° → Angolo effettivo: ${results.effectiveLaunchAngle.toFixed(2)}°`),
+                        results.posturalDeltaHeight !== 0 && e('div', null, `👤 Correzione posturale: ${(results.posturalDeltaHeight > 0 ? '+' : '') + (results.posturalDeltaHeight * 100).toFixed(1)} cm → H lancio: ${results.finalLaunchHeight.toFixed(2)} m`)
+                    ),
+                    e('div', { className: 'tabs-container' },
+                        ['trajectory', 'velocity', 'energy', 'drop', 'sight'].map(tab =>
+                            e('button', { key: tab, onClick: () => setActiveTab(tab), className: 'tab-btn' + (activeTab === tab ? ' active' : '') }, t(tab === 'trajectory' ? 'tabTrajectory' : tab === 'velocity' ? 'tabVelocity' : tab === 'energy' ? 'tabEnergy' : tab === 'drop' ? 'tabDrop' : 'tabSight'))
+                        )
+                    ),
+                    e('div', { className: 'tab-content panel' },
+                        activeTab === 'trajectory' && e('div', null,
+                            e('div', { className: 'legend' },
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.primary } }), t('real')),
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.secondary } }), t('ideal')),
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.danger } }), t('sightLine'))
+                            ),
+                            e('div', { className: 'chart-container' },
+                                e(SVGChart, { data: imperialChartData, xKey: 'x', yKeys: ['yReal', 'yIdeal', 'ySight'], colors: [COLORS.primary, COLORS.secondary, COLORS.danger], xLabelText: xLabelDistance, yLabelText: yLabelHeight, xDomain: unitSystem === 'metric' ? [0, targetDistance] : [0, conversions.distance_to_imperial(targetDistance)], darkMode, yKeyLabels: { yReal: t('real'), yIdeal: t('ideal'), ySight: t('sightLine') }, refPoints: [
+                                    { x: unitSystem === 'metric' ? targetDistance : conversions.distance_to_imperial(targetDistance), y: unitSystem === 'metric' ? targetHeight : conversions.length_to_imperial(targetHeight), r: 8, color: COLORS.accent },
+                                    { x: unitSystem === 'metric' ? targetDistance : conversions.distance_to_imperial(targetDistance), y: unitSystem === 'metric' ? results.impactHeight : conversions.length_to_imperial(results.impactHeight), r: 5, color: '#22c55e' }
+                                ] })
+                            ),
+                            e('div', { className: 'target-legend' },
+                                e('span', { className: 'item' }, e('span', { className: 'dot orange' }), ` ${t('target')} (${unitSystem === 'metric' ? targetHeight.toFixed(2) : conversions.length_to_imperial(targetHeight).toFixed(2)} ${unitSystem === 'metric' ? 'm' : 'in'})`),
+                                e('span', { className: 'item' }, e('span', { className: 'dot green' }), ` ${t('impact')} (${unitSystem === 'metric' ? results.impactHeight.toFixed(2) : conversions.length_to_imperial(results.impactHeight).toFixed(2)} ${unitSystem === 'metric' ? 'm' : 'in'})`),
+                                Math.abs(results.impactHeight - targetHeight) < 0.05 && e('span', { className: 'success' }, t('center'))
+                            )
+                        ),
+                        activeTab === 'velocity' && e('div', null,
+                            e('div', { className: 'legend' },
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.success } }), t('total')),
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.primary } }), 'Vx'),
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.danger } }), 'Vy')
+                            ),
+                            e('div', { className: 'chart-container' },
+                                e(SVGChart, { data: imperialChartData, xKey: 'x', yKeys: ['vTotal', 'vx', 'vy'], colors: [COLORS.success, COLORS.primary, COLORS.danger], xLabelText: xLabelDistance, yLabelText: yLabelSpeed, xDomain: unitSystem === 'metric' ? [0, targetDistance] : [0, conversions.distance_to_imperial(targetDistance)], darkMode, yKeyLabels: { vTotal: t('total'), vx: 'Vx', vy: 'Vy' } })
+                            )
+                        ),
+                        activeTab === 'energy' && e('div', null,
+                            e('div', { className: 'chart-container' },
+                                e(SVGChart, { data: imperialChartData, xKey: 'x', yKeys: ['energyPct'], colors: [COLORS.warning], xLabelText: xLabelDistance, yLabelText: yLabelEnergy, xDomain: unitSystem === 'metric' ? [0, targetDistance] : [0, conversions.distance_to_imperial(targetDistance)], darkMode, yKeyLabels: { energyPct: t('energyHeader') } })
+                            )
+                        ),
+                        activeTab === 'drop' && e('div', null,
+                            e('div', { className: 'legend' },
+                                e('span', { className: 'legend-item' }, e('span', { className: 'legend-dot', style: { backgroundColor: COLORS.secondary } }), t('dropHeader'))
+                            ),
+                            e('div', { className: 'chart-container' },
+                                e(SVGChart, { data: imperialDropData, xKey: 'x', yKeys: ['drop'], colors: [COLORS.secondary], xLabelText: xLabelDistance, yLabelText: yLabelDrop, showDots: true, darkMode, yKeyLabels: { drop: t('dropHeader') } })
+                            )
+                        ),
+                        activeTab === 'sight' && e('div', null,
+                            e('div', { className: 'sight-header' },
+                                e('h3', null, t('tabSight')),
+                                e('div', { style: { display: 'flex', gap: '8px' } },
+                                    e('button', { onClick: exportPDF, className: 'btn-csv', style: { backgroundColor: '#ef4444' } }, t('exportPDF')),
+                                    e('button', { onClick: exportCSV, className: 'btn-csv' }, t('exportCSV'))
+                                )
+                            ),
+                            e('div', { className: 'sight-section' },
+                                e('div', { className: 'sight-table-container' },
+                                    e('table', { className: 'sight-table' },
+                                        e('thead', null, e('tr', { className: 'table-header' },
+                                            e('th', { className: 'table-text' }, `${t('distHeader')} (${unitSystem === 'metric' ? 'm' : 'yd'})`),
+                                            e('th', { className: 'table-text' }, `${t('dropHeader')} (${unitSystem === 'metric' ? 'cm' : 'in'})`),
+                                            e('th', { className: 'table-text' }, `${t('riserHeader')} (${unitSystem === 'metric' ? 'cm' : 'in'})`),
+                                            e('th', { className: 'table-text' }, `${t('energyHeader')} (${unitSystem === 'metric' ? 'J' : 'ft·lb'})`),
+                                            e('th', { className: 'table-text' }, `${t('velocityHeader')} (${unitSystem === 'metric' ? 'm/s' : 'ft/s'})`)
+                                        )),
+                                        e('tbody', null, results.sightMarks.map((m, i) => {
+                                            let dist = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+                                            let drop = unitSystem === 'metric' ? m.dropCm : conversions.drop_to_imperial(m.dropCm);
+                                            let proj = unitSystem === 'metric' ? m.projectionCm : conversions.drop_to_imperial(m.projectionCm);
+                                            let energy = unitSystem === 'metric' ? m.energy : conversions.energy_to_imperial(m.energy);
+                                            let vel = unitSystem === 'metric' ? m.velocity : conversions.speed_to_imperial(m.velocity);
+                                            return e('tr', { key: m.distance, className: m.distance === targetDistance ? 'table-row-highlight' : (i % 2 === 0 ? 'table-row-even' : '') },
+                                                e('td', { className: 'table-text-bold' }, dist.toFixed(1)),
+                                                e('td', { className: 'table-text' }, drop.toFixed(1)),
+                                                e('td', { className: 'table-text' }, proj.toFixed(1)),
+                                                e('td', { className: 'table-text' }, energy.toFixed(1)),
+                                                e('td', { className: 'table-text' }, vel.toFixed(1))
+                                            );
+                                        }))
+                                    )
+                                ),
+                                e(SightScaleViz, { sightMarks: results.sightMarks, eyeToNock, nockToRiser, darkMode })
+                            )
+                        )
+                    )
+                ) : e('div', { className: 'placeholder panel' },
+                    e('div', { className: 'placeholder-content' },
+                        e('div', { className: 'placeholder-icon' }, '🏹'),
+                        e('p', { className: 'placeholder-title' }, t('simulate')),
+                        e('p', { className: 'label' }, 'Configura i parametri e premi SIMULA')
+                    )
+                )
+            )
+        ),
+        e('div', { className: 'footer label' }, 'Arrow Ballistic Simulator v9.0 • RK4 Adaptive • 🇮🇹🇬🇧🇪🇸🇫🇷🇩🇪 • by Cesare Pagura & Claude'),
+        showCSVModal && e('div', { className: 'modal-overlay' },
+            e('div', { className: 'modal-content panel' },
+                e('div', { className: 'modal-header' }, e('h3', null, t('exportCSV')), e('button', { className: 'modal-close', onClick: () => setShowCSVModal(false) }, '×')),
+                e('p', { className: 'label', style: { fontSize: '0.75rem', marginBottom: 8 } }, 'CSV content:'),
+                e('textarea', { readOnly: true, value: csvContent, className: 'modal-textarea input-field', onClick: ev => ev.target.select() }),
+                e('div', { className: 'modal-buttons' },
+                    e('button', { className: 'modal-btn copy-btn', onClick: () => navigator.clipboard && navigator.clipboard.writeText(csvContent) }, t('copy')),
+                    e('button', { className: 'modal-btn download-btn', onClick: downloadCSV }, t('download')),
+                    e('button', { className: 'modal-btn close-btn', onClick: () => setShowCSVModal(false) }, t('close'))
+                )
+            )
+        )
+    );
+}
+
+// Render con I18nProvider
+const root = createRoot(document.getElementById('root'));
+root.render(e(I18nProvider, null, e(BallisticSimulator, null)));
+
+})();
+    </script>
+</body>
+</html>
