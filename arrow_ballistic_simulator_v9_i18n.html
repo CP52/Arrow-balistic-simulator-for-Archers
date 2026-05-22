@@ -732,6 +732,8 @@ function useI18n() {
 const conversions = {
     mass_to_imperial: (g) => g * 15.4323584,
     mass_to_metric: (gr) => gr / 15.4323584,
+    grains_to_imperial: (gr) => gr,   // grani sempre grani, nessuna conversione
+    grains_to_metric: (gr) => gr,     // grani sempre grani, nessuna conversione
     length_to_imperial: (m) => m * 39.3700787,
     length_to_metric: (in_) => in_ / 39.3700787,
     diameter_to_imperial: (mm) => mm * 0.0393700787,
@@ -1158,7 +1160,8 @@ function InputFieldWithUnits({ labelKey, valueMetric, onChange, min, max, step, 
     const handleKeyDown = (ev) => { if (ev.key === 'Enter') { commit(ev.target.value); ev.target.blur(); } };
 
     let unitLabel = '';
-    if (quantity === 'mass') unitLabel = unitSystem === 'metric' ? t('unit_mass_metric') : t('unit_mass_imperial');
+    if (quantity === 'grains') unitLabel = 'gr';
+    else if (quantity === 'mass') unitLabel = unitSystem === 'metric' ? t('unit_mass_metric') : t('unit_mass_imperial');
     else if (quantity === 'length') unitLabel = unitSystem === 'metric' ? t('unit_length_metric') : t('unit_length_imperial');
     else if (quantity === 'diameter') unitLabel = unitSystem === 'metric' ? t('unit_diameter_metric') : t('unit_diameter_imperial');
     else if (quantity === 'drawForce') unitLabel = t('unit_drawForce');
@@ -1691,7 +1694,7 @@ function BallisticSimulator() {
                     e(InputFieldWithUnits, { labelKey: 'lengthLabel', valueMetric: length, onChange: setLength, min: 0.5, max: 1.2, step: 0.01, quantity: 'length' }),
                     e(InputFieldWithUnits, { labelKey: 'diameterLabel', valueMetric: diameter, onChange: setDiameter, min: 4, max: 12, step: 0.1, quantity: 'diameter' }),
                     e(InputFieldWithUnits, { labelKey: 'spineLabel', valueMetric: spine, onChange: setSpine, min: 200, max: 1500, step: 25, quantity: null }),
-                    e(InputFieldWithUnits, { labelKey: 'tipWeightLabel', valueMetric: tipWeight, onChange: setTipWeight, min: 50, max: 300, step: 5, quantity: 'mass' }),
+                    e(InputFieldWithUnits, { labelKey: 'tipWeightLabel', valueMetric: tipWeight, onChange: setTipWeight, min: 50, max: 300, step: 5, quantity: 'grains' }),
                     e(InputFieldWithUnits, { labelKey: 'balanceLabel', valueMetric: balancePoint, onChange: setBalancePoint, min: 0.2, max: 0.6, step: 0.01, quantity: 'balance' }),
                     e(SelectField, { labelKey: 'tipTypeLabel', value: tipType, onChange: setTipType, options: Object.keys(TIP_TYPE_CD_FACTOR) }),
                     e(SelectField, { labelKey: 'fletchingLabel', value: fletchingType, onChange: setFletchingType, options: Object.keys(FLETCHING_TYPE_CD_FACTOR) })
