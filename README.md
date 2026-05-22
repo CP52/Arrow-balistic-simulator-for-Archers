@@ -127,17 +127,30 @@ Copy to clipboard or download. Compatible with Excel, LibreOffice Calc, etc.
 
 ---
 
-## How to use
+## How to use it
 
-1. **Download** `arrow_ballistic_simulator_v9_i18n.html`
-2. **Open** it in any modern browser (Chrome, Firefox, Edge, Safari)
-3. Fill in your parameters and press **SIMULATE**
-4. Navigate tabs to explore results
-5. Go to the **Sight** tab to export PDF or CSV
+### 🌐 Online (recommended)
+Open directly in your browser:
+**https://arrow-sim.netlify.app**
+Works on PC, Mac, iPhone, Android and tablet — no installation required.
 
-> The app loads React and jsPDF from CDN on first use. After that it works fully offline.  
-> On iOS/Safari: tap Share → Add to Home Screen for a standalone app icon.
+### 💾 Offline — standalone version
+Download the file:
+**`arrow_ballistic_simulator_v9_i18n_offline.html`**
+Open it with any modern browser (Chrome, Firefox, Safari, Edge).
+Works completely offline from the very first use — no internet connection needed.
+Ideal for field use, via AirDrop, Files or USB drive.
 
+### 🔧 Base version (for developers)
+The file `arrow_ballistic_simulator_v9_i18n.html` is the main source.
+Requires an internet connection on first launch to download React and jsPDF from CDN.
+After the first load it works offline.
+
+### 📱 iPhone / iPad
+- **Option 1 (recommended):** open https://arrow-sim.netlify.app in Safari →
+  tap Share → **Add to Home Screen** for a dedicated icon.
+- **Option 2:** download `arrow_ballistic_simulator_v9_i18n_offline.html`,
+  open it in Safari from Files — works without internet.
 ---
 
 ## Technical notes
