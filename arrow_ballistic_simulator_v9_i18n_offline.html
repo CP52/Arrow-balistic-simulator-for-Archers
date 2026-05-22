@@ -946,6 +946,9 @@ const translations = {
         pelvisHeightLabel: "Altezza bacino",
         anchorLengthLabel: "Spalla-aggancio",
         posturalCorrectionLabel: "Correzione posturale",
+        resultNockingOffset: "Offset incocco",
+        resultPosturalCorr: "Correzione posturale",
+        resultLaunchH: "H lancio",
         posturalInfo: "La correzione posturale calcola la variazione dell'altezza di sgancio in base all'angolo di tiro (rotazione bacino in posizione 'T')",
         windLabel: "Vento",
         tempLabel: "Temperatura",
@@ -997,7 +1000,9 @@ const translations = {
         axis_height: (unit) => `Altezza (${unit})`,
         axis_speed: (unit) => `Velocità (${unit})`,
         axis_energy: () => `Energia (%)`,
-        axis_drop: (unit) => `Drop (${unit})`
+        axis_drop: (unit) => `Drop (${unit})`,
+        bowTypeOptions: { "longbow": "Longbow", "ricurvo": "Ricurvo", "compound": "Compound", "takedown": "Takedown", "barebow": "Barebow", "hunting_recurve": "Hunting Recurve" },
+        fletchingOptions: { "Nessuna": "Nessuna", "Low-profile 2-3": "Low-profile 2-3", "Standard 3": "Standard 3", "Grande 3x5": "Grande 3×5", "Flu-flu": "Flu-flu" }
     },
     en: {
         appTitle: "🏹 Ballistic Simulator",
@@ -1051,6 +1056,9 @@ const translations = {
         pelvisHeightLabel: "Pelvis height",
         anchorLengthLabel: "Shoulder-to-anchor",
         posturalCorrectionLabel: "Postural correction",
+        resultNockingOffset: "Nocking offset",
+        resultPosturalCorr: "Postural correction",
+        resultLaunchH: "Launch H",
         posturalInfo: "Postural correction adjusts release height based on shooting angle (pelvis rotation in 'T' position)",
         windLabel: "Wind",
         tempLabel: "Temperature",
@@ -1101,7 +1109,9 @@ const translations = {
         axis_height: (unit) => `Height (${unit})`,
         axis_speed: (unit) => `Velocity (${unit})`,
         axis_energy: () => `Energy (%)`,
-        axis_drop: (unit) => `Drop (${unit})`
+        axis_drop: (unit) => `Drop (${unit})`,
+        bowTypeOptions: { "longbow": "Longbow", "ricurvo": "Recurve", "compound": "Compound", "takedown": "Takedown", "barebow": "Barebow", "hunting_recurve": "Hunting Recurve" },
+        fletchingOptions: { "Nessuna": "None", "Low-profile 2-3": "Low-profile 2-3", "Standard 3": "Standard 3", "Grande 3x5": "Large 3×5", "Flu-flu": "Flu-flu" }
     },
     es: {
         appTitle: "🏹 Simulador Balístico",
@@ -1155,6 +1165,9 @@ const translations = {
         pelvisHeightLabel: "Altura de pelvis",
         anchorLengthLabel: "Hombro a anclaje",
         posturalCorrectionLabel: "Corrección postural",
+        resultNockingOffset: "Offset culatín",
+        resultPosturalCorr: "Corrección postural",
+        resultLaunchH: "H lanzam.",
         posturalInfo: "La corrección postural ajusta la altura de lanzamiento según el ángulo de tiro (rotación de pelvis en posición 'T')",
         windLabel: "Viento",
         tempLabel: "Temperatura",
@@ -1205,7 +1218,9 @@ const translations = {
         axis_height: (unit) => `Altura (${unit})`,
         axis_speed: (unit) => `Velocidad (${unit})`,
         axis_energy: () => `Energía (%)`,
-        axis_drop: (unit) => `Caída (${unit})`
+        axis_drop: (unit) => `Caída (${unit})`,
+        bowTypeOptions: { "longbow": "Arco largo", "ricurvo": "Recurvo", "compound": "Compound", "takedown": "Desmontable", "barebow": "Barebow", "hunting_recurve": "Recurvo caza" },
+        fletchingOptions: { "Nessuna": "Sin plumas", "Low-profile 2-3": "Low-profile 2-3", "Standard 3": "Estándar 3", "Grande 3x5": "Grande 3×5", "Flu-flu": "Flu-flu" }
     },
     fr: {
         appTitle: "🏹 Simulateur Balistique",
@@ -1259,6 +1274,9 @@ const translations = {
         pelvisHeightLabel: "Hauteur du bassin",
         anchorLengthLabel: "Épaule à ancrage",
         posturalCorrectionLabel: "Correction posturale",
+        resultNockingOffset: "Décalage encoche",
+        resultPosturalCorr: "Correction posturale",
+        resultLaunchH: "H lancé",
         posturalInfo: "La correction posturale ajuste la hauteur de lâcher en fonction de l'angle de tir (rotation du bassin en position 'T')",
         windLabel: "Vent",
         tempLabel: "Température",
@@ -1309,7 +1327,9 @@ const translations = {
         axis_height: (unit) => `Hauteur (${unit})`,
         axis_speed: (unit) => `Vitesse (${unit})`,
         axis_energy: () => `Énergie (%)`,
-        axis_drop: (unit) => `Chute (${unit})`
+        axis_drop: (unit) => `Chute (${unit})`,
+        bowTypeOptions: { "longbow": "Longbow", "ricurvo": "Recurve", "compound": "Compound", "takedown": "Démontable", "barebow": "Barebow", "hunting_recurve": "Recurve chasse" },
+        fletchingOptions: { "Nessuna": "Sans empennage", "Low-profile 2-3": "Low-profile 2-3", "Standard 3": "Standard 3", "Grande 3x5": "Grande 3×5", "Flu-flu": "Flu-flu" }
     },
     de: {
         appTitle: "🏹 Ballistik-Simulator",
@@ -1363,6 +1383,9 @@ const translations = {
         pelvisHeightLabel: "Beckenhöhe",
         anchorLengthLabel: "Schulter zu Anker",
         posturalCorrectionLabel: "Haltungskorrektur",
+        resultNockingOffset: "Nocken-Versatz",
+        resultPosturalCorr: "Haltungskorrektur",
+        resultLaunchH: "Abschuss-H",
         posturalInfo: "Die Haltungskorrektur passt die Abschusshöhe basierend auf dem Schießwinkel an (Beckenrotation in 'T'-Position)",
         windLabel: "Wind",
         tempLabel: "Temperatur",
@@ -1413,7 +1436,9 @@ const translations = {
         axis_height: (unit) => `Höhe (${unit})`,
         axis_speed: (unit) => `Geschwindigkeit (${unit})`,
         axis_energy: () => `Energie (%)`,
-        axis_drop: (unit) => `Abfall (${unit})`
+        axis_drop: (unit) => `Abfall (${unit})`,
+        bowTypeOptions: { "longbow": "Langbogen", "ricurvo": "Recurvebogen", "compound": "Compound", "takedown": "Takedown", "barebow": "Barebow", "hunting_recurve": "Jagd-Recurve" },
+        fletchingOptions: { "Nessuna": "Ohne", "Low-profile 2-3": "Low-profile 2-3", "Standard 3": "Standard 3", "Grande 3x5": "Groß 3×5", "Flu-flu": "Flu-flu" }
     }
 };
 
@@ -1888,12 +1913,14 @@ function InputFieldWithUnits({ labelKey, valueMetric, onChange, min, max, step, 
     );
 }
 
-function SelectField({ labelKey, value, onChange, options }) {
+function SelectField({ labelKey, value, onChange, options, displayMap }) {
     const { t } = useI18n();
+    // displayMap: optional {internalKey: displayLabel} for translating option labels
+    const getLabel = (opt) => (displayMap && displayMap[opt]) ? displayMap[opt] : opt;
     return e('div', { className: 'form-group' },
         e('label', { className: 'label' }, t(labelKey)),
         e('select', { value, onChange: ev => onChange(ev.target.value), className: 'input-field' },
-            options.map(opt => e('option', { key: opt, value: opt }, opt))
+            options.map(opt => e('option', { key: opt, value: opt }, getLabel(opt)))
         )
     );
 }
@@ -2395,14 +2422,14 @@ function BallisticSimulator() {
                     e(InputFieldWithUnits, { labelKey: 'tipWeightLabel', valueMetric: tipWeight, onChange: setTipWeight, min: 50, max: 300, step: 5, quantity: 'grains' }),
                     e(InputFieldWithUnits, { labelKey: 'balanceLabel', valueMetric: balancePoint, onChange: setBalancePoint, min: 0.2, max: 0.6, step: 0.01, quantity: 'balance' }),
                     e(SelectField, { labelKey: 'tipTypeLabel', value: tipType, onChange: setTipType, options: Object.keys(TIP_TYPE_CD_FACTOR) }),
-                    e(SelectField, { labelKey: 'fletchingLabel', value: fletchingType, onChange: setFletchingType, options: Object.keys(FLETCHING_TYPE_CD_FACTOR) })
+                    e(SelectField, { labelKey: 'fletchingLabel', value: fletchingType, onChange: setFletchingType, options: Object.keys(FLETCHING_TYPE_CD_FACTOR), displayMap: t('fletchingOptions') })
                 ),
                 e(CollapsiblePanel, { titleKey: 'bowPanel' },
                     e(InputFieldWithUnits, { labelKey: 'drawForceLabel', valueMetric: drawForce, onChange: setDrawForce, min: 20, max: 100, step: 1, quantity: 'drawForce' }),
                     e(InputFieldWithUnits, { labelKey: 'drawLengthLabel', valueMetric: drawLength, onChange: setDrawLength, min: 0.55, max: 0.85, step: 0.01, quantity: 'length' }),
                     e(InputFieldWithUnits, { labelKey: 'braceHeightLabel', valueMetric: braceHeight, onChange: setBraceHeight, min: 0.1, max: 0.25, step: 0.01, quantity: 'length' }),
                     e(NockingOffsetField, { value: nockingOffset, onChange: setNockingOffset }),
-                    e(SelectField, { labelKey: 'bowTypeLabel', value: bowType, onChange: v => { setBowType(v); setEfficiency(BOW_TYPE_EFFICIENCY[v] || 0.8); }, options: Object.keys(BOW_TYPE_EFFICIENCY) }),
+                    e(SelectField, { labelKey: 'bowTypeLabel', value: bowType, onChange: v => { setBowType(v); setEfficiency(BOW_TYPE_EFFICIENCY[v] || 0.8); }, options: Object.keys(BOW_TYPE_EFFICIENCY), displayMap: t('bowTypeOptions') }),
                     e(InputFieldWithUnits, { labelKey: 'efficiencyLabel', valueMetric: efficiency, onChange: setEfficiency, min: 0.6, max: 0.95, step: 0.01, quantity: null })
                 ),
                 e(CollapsiblePanel, { titleKey: 'targetPanel' },
@@ -2452,8 +2479,8 @@ function BallisticSimulator() {
                         e(MetricCard, { labelKey: 'maxRange', value: (unitSystem === 'metric' ? results.maxRangeInfo.maxRange.toFixed(1) : conversions.distance_to_imperial(results.maxRangeInfo.maxRange).toFixed(1)) + `${unitSystem === 'metric' ? 'm' : 'yd'} @${results.maxRangeInfo.optimalAngle}°` })
                     ),
                     (results.nockingAngleOffset !== 0 || results.posturalDeltaHeight !== 0) && e('div', { className: 'panel', style: { padding: '8px 12px', marginBottom: '12px', fontSize: '0.8rem' } },
-                        results.nockingAngleOffset !== 0 && e('div', { style: { marginBottom: '4px' } }, `📐 Offset incocco: ${(results.nockingAngleOffset > 0 ? '+' : '') + results.nockingAngleOffset.toFixed(3)}° → Angolo effettivo: ${results.effectiveLaunchAngle.toFixed(2)}°`),
-                        results.posturalDeltaHeight !== 0 && e('div', null, `👤 Correzione posturale: ${(results.posturalDeltaHeight > 0 ? '+' : '') + (results.posturalDeltaHeight * 100).toFixed(1)} cm → H lancio: ${results.finalLaunchHeight.toFixed(2)} m`)
+                        results.nockingAngleOffset !== 0 && e('div', { style: { marginBottom: '4px' } }, `📐 ${t('resultNockingOffset')}: ${(results.nockingAngleOffset > 0 ? '+' : '') + results.nockingAngleOffset.toFixed(3)}° → ${t('aimAngle')}: ${results.effectiveLaunchAngle.toFixed(2)}°`),
+                        results.posturalDeltaHeight !== 0 && e('div', null, `👤 ${t('resultPosturalCorr')}: ${(results.posturalDeltaHeight > 0 ? '+' : '') + (results.posturalDeltaHeight * 100).toFixed(1)} cm → ${t('resultLaunchH')}: ${results.finalLaunchHeight.toFixed(2)} m`)
                     ),
                     e('div', { className: 'tabs-container' },
                         ['trajectory', 'velocity', 'energy', 'drop', 'sight'].map(tab =>
