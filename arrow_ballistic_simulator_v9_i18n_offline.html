@@ -142,6 +142,10 @@
         .placeholder-title { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
         
         .footer { text-align: center; margin-top: 16px; font-size: 0.75rem; }
+        .doc-links { margin-top: 6px; font-size: 0.72rem; color: #c7d2fe; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .doc-links a { color: #a5b4fc; text-decoration: none; opacity: 0.85; transition: opacity 0.2s; }
+        .doc-links a:hover { opacity: 1; text-decoration: underline; }
+        .doc-links .doc-sep { opacity: 0.4; }
         
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
         .modal-content { max-width: 32rem; width: 100%; padding: 16px; border-radius: 12px; border: 1px solid; }
@@ -898,6 +902,8 @@ const translations = {
         appTitle: "🏹 Simulatore Balistico",
         subtitle: "RK4 Adattivo • Generazione Mirino • Analisi Completa",
         credits: "by Cesare Pagura & Claude",
+        docIntro: "Introduzione",
+        docManual: "Manuale",
         simulate: "🚀 SIMULA",
         simulating: "⏳ Calcolo...",
         aimAngle: "Angolo mira",
@@ -1008,6 +1014,8 @@ const translations = {
         appTitle: "🏹 Ballistic Simulator",
         subtitle: "Adaptive RK4 • Sight Generation • Full Analysis",
         credits: "by Cesare Pagura & Claude",
+        docIntro: "Introduction",
+        docManual: "User Manual",
         simulate: "🚀 SIMULATE",
         simulating: "⏳ Computing...",
         aimAngle: "Aim angle",
@@ -1117,6 +1125,8 @@ const translations = {
         appTitle: "🏹 Simulador Balístico",
         subtitle: "RK4 Adaptativo • Generación de Visor • Análisis Completo",
         credits: "por Cesare Pagura & Claude",
+        docIntro: "Introducción",
+        docManual: "Manual",
         simulate: "🚀 SIMULAR",
         simulating: "⏳ Calculando...",
         aimAngle: "Ángulo de mira",
@@ -1226,6 +1236,8 @@ const translations = {
         appTitle: "🏹 Simulateur Balistique",
         subtitle: "RK4 Adaptatif • Génération de Viseur • Analyse Complète",
         credits: "par Cesare Pagura & Claude",
+        docIntro: "Introduction",
+        docManual: "Manuel",
         simulate: "🚀 SIMULER",
         simulating: "⏳ Calcul...",
         aimAngle: "Angle de visée",
@@ -1335,6 +1347,8 @@ const translations = {
         appTitle: "🏹 Ballistik-Simulator",
         subtitle: "Adaptives RK4 • Visier-Generierung • Vollständige Analyse",
         credits: "von Cesare Pagura & Claude",
+        docIntro: "Einführung",
+        docManual: "Handbuch",
         simulate: "🚀 SIMULIEREN",
         simulating: "⏳ Berechnung...",
         aimAngle: "Zielwinkel",
@@ -2410,7 +2424,18 @@ function BallisticSimulator() {
             ),
             e('h1', null, t('appTitle')),
             e('p', { className: 'subtitle' }, t('subtitle')),
-            e('p', { className: 'credits' }, t('credits'))
+            e('p', { className: 'credits' }, t('credits')),
+            e('div', { className: 'doc-links' },
+                e('span', null, '📄'),
+                e('a', { href: 'https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Simulatore_balistico_Introduzione_v9_IT.pdf', target: '_blank', title: 'IT' }, `${t('docIntro')} 🇮🇹`),
+                e('span', { className: 'doc-sep' }, '|'),
+                e('a', { href: 'https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Arrow_Ballistic_Simulator_Introduction_v9_EN.pdf', target: '_blank', title: 'EN' }, `${t('docIntro')} 🇬🇧`),
+                e('span', { className: 'doc-sep' }, '·'),
+                e('span', null, '📋'),
+                e('a', { href: 'https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Manuale_Simulatore_Balistico_v9_IT.pdf', target: '_blank', title: 'IT' }, `${t('docManual')} 🇮🇹`),
+                e('span', { className: 'doc-sep' }, '|'),
+                e('a', { href: 'https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Arrow_Ballistic_Simulator_UserManual_v9_EN.pdf', target: '_blank', title: 'EN' }, `${t('docManual')} 🇬🇧`)
+            )
         ),
         e('div', { className: 'main-layout' },
             e('div', { className: 'params-grid' },
