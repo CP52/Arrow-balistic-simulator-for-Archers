@@ -219,6 +219,12 @@ const translations = {
         tabEnergy: "🔋 Energia",
         tabDrop: "📉 Drop",
         tabSight: "🎯 Mirino",
+        tabStringwalk: "🤞 Stringwalking",
+        swGripCol: "Aggancio (mm)",
+        swNote: "mm sotto la cocca — valore positivo = più in basso sulla corda",
+        swTitle: "Tabella Stringwalking",
+        swSubtitle: "Per ogni distanza: quanti mm scendere sulla corda rispetto alla cocca",
+        swRef: "Riferimento: 0 mm = aggancio immediatamente sotto la cocca",
         real: "Reale",
         ideal: "Ideale",
         sightLine: "Mira",
@@ -263,7 +269,7 @@ const translations = {
         pressureLabel: "Pressione",
         humidityLabel: "Umidità",
         altitudeLabel: "Altitudine",
-        eyeToNockLabel: "Occhio-cocca",
+        eyeToNockLabel: "Occhio-cocca (barebow ~12 cm, SW ~2-3 cm)",
         nockToRiserLabel: "Cocca-riser",
         distMinLabel: "Dist. min",
         distMaxLabel: "Dist. max",
@@ -331,6 +337,12 @@ const translations = {
         tabEnergy: "🔋 Energy",
         tabDrop: "📉 Drop",
         tabSight: "🎯 Sight",
+        tabStringwalk: "🤞 Stringwalking",
+        swGripCol: "Grip point (mm)",
+        swNote: "mm below nock — positive value = lower on the string",
+        swTitle: "Stringwalking Table",
+        swSubtitle: "For each distance: how many mm to walk down from the nock",
+        swRef: "Reference: 0 mm = grip just below the nock",
         real: "Actual",
         ideal: "Ideal (no drag)",
         sightLine: "Line of sight",
@@ -375,7 +387,7 @@ const translations = {
         pressureLabel: "Pressure",
         humidityLabel: "Humidity",
         altitudeLabel: "Altitude",
-        eyeToNockLabel: "Eye to nock",
+        eyeToNockLabel: "Eye to nock (barebow ~12 cm, SW ~2-3 cm)",
         nockToRiserLabel: "Nock to riser",
         distMinLabel: "Min dist",
         distMaxLabel: "Max dist",
@@ -442,6 +454,12 @@ const translations = {
         tabEnergy: "🔋 Energía",
         tabDrop: "📉 Caída",
         tabSight: "🎯 Visor",
+        tabStringwalk: "🤞 Stringwalking",
+        swGripCol: "Agarre (mm)",
+        swNote: "mm bajo la muesca — valor positivo = más abajo en la cuerda",
+        swTitle: "Tabla Stringwalking",
+        swSubtitle: "Para cada distancia: cuántos mm bajar desde la muesca",
+        swRef: "Referencia: 0 mm = agarre justo bajo la muesca",
         real: "Real",
         ideal: "Ideal (sin arrastre)",
         sightLine: "Línea de mira",
@@ -486,7 +504,7 @@ const translations = {
         pressureLabel: "Presión",
         humidityLabel: "Humedad",
         altitudeLabel: "Altitud",
-        eyeToNockLabel: "Ojo a culatín",
+        eyeToNockLabel: "Ojo a culatín (barebow ~12 cm, SW ~2-3 cm)",
         nockToRiserLabel: "Culatín a empuñadura",
         distMinLabel: "Dist. mín",
         distMaxLabel: "Dist. máx",
@@ -553,6 +571,12 @@ const translations = {
         tabEnergy: "🔋 Énergie",
         tabDrop: "📉 Chute",
         tabSight: "🎯 Viseur",
+        tabStringwalk: "🤞 Stringwalking",
+        swGripCol: "Point de prise (mm)",
+        swNote: "mm sous l'encoche — valeur positive = plus bas sur la corde",
+        swTitle: "Tableau Stringwalking",
+        swSubtitle: "Pour chaque distance: de combien descendre sur la corde depuis l'encoche",
+        swRef: "Référence: 0 mm = prise juste sous l'encoche",
         real: "Réel",
         ideal: "Idéal (sans traînée)",
         sightLine: "Ligne de visée",
@@ -597,7 +621,7 @@ const translations = {
         pressureLabel: "Pression",
         humidityLabel: "Humidité",
         altitudeLabel: "Altitude",
-        eyeToNockLabel: "Œil à encoche",
+        eyeToNockLabel: "Œil à encoche (barebow ~12 cm, SW ~2-3 cm)",
         nockToRiserLabel: "Encoche à poignée",
         distMinLabel: "Dist. min",
         distMaxLabel: "Dist. max",
@@ -664,6 +688,12 @@ const translations = {
         tabEnergy: "🔋 Energie",
         tabDrop: "📉 Abfall",
         tabSight: "🎯 Visier",
+        tabStringwalk: "🤞 Stringwalking",
+        swGripCol: "Greifpunkt (mm)",
+        swNote: "mm unter der Nocke — positiver Wert = weiter unten an der Sehne",
+        swTitle: "Stringwalking-Tabelle",
+        swSubtitle: "Für jede Distanz: wie viele mm von der Nocke nach unten greifen",
+        swRef: "Referenz: 0 mm = Griff direkt unter der Nocke",
         real: "Real",
         ideal: "Ideal (ohne Widerstand)",
         sightLine: "Ziellinie",
@@ -708,7 +738,7 @@ const translations = {
         pressureLabel: "Druck",
         humidityLabel: "Feuchtigkeit",
         altitudeLabel: "Höhe",
-        eyeToNockLabel: "Auge zu Nocke",
+        eyeToNockLabel: "Auge zu Nocke (barebow ~12 cm, SW ~2-3 cm)",
         nockToRiserLabel: "Nocke zu Griff",
         distMinLabel: "Min. Dist.",
         distMaxLabel: "Max. Dist.",
@@ -773,6 +803,8 @@ const conversions = {
     mass_to_metric: (gr) => gr / 15.4323584,
     grains_to_imperial: (gr) => gr,   // grani sempre grani, nessuna conversione
     grains_to_metric: (gr) => gr,     // grani sempre grani, nessuna conversione
+    cm_to_imperial: (m) => m * 100,   // mostra sempre in cm (indip. dal sistema)
+    cm_to_metric: (cm) => cm / 100,   // converte cm → m per la fisica interna
     length_to_imperial: (m) => m * 39.3700787,
     length_to_metric: (in_) => in_ / 39.3700787,
     diameter_to_imperial: (mm) => mm * 0.0393700787,
@@ -1200,6 +1232,7 @@ function InputFieldWithUnits({ labelKey, valueMetric, onChange, min, max, step, 
 
     let unitLabel = '';
     if (quantity === 'grains') unitLabel = 'gr';
+    else if (quantity === 'cm') unitLabel = 'cm';
     else if (quantity === 'mass') unitLabel = unitSystem === 'metric' ? t('unit_mass_metric') : t('unit_mass_imperial');
     else if (quantity === 'length') unitLabel = unitSystem === 'metric' ? t('unit_length_metric') : t('unit_length_imperial');
     else if (quantity === 'diameter') unitLabel = unitSystem === 'metric' ? t('unit_diameter_metric') : t('unit_diameter_imperial');
@@ -1531,6 +1564,24 @@ function BallisticSimulator() {
                 const distances = [];
                 for (let d = distMin; d <= distMax; d += distStep) distances.push(d);
                 const sightMarks = generateSightMarks(distances, trajectory, params, aimAngle, nockingAngleOffset);
+                // Stringwalking table
+                // The archer aims along the arrow axis toward the target centre.
+                // Moving the grip down the string by gripMm changes the effective
+                // launch angle relative to the arrow axis by nockingAngleOffset.
+                // For a flat (eye-level) target at height = launchHeight:
+                //   launchAngle = angle needed to reach (d, targetHeight)
+                //   gripMm = tan(launchAngle_rad) * restToCock * 1000
+                // restToCock ≈ arrow length * 0.9
+                const swRestToCock = length * 0.9;
+                const stringwalkMarks = distances.map(d => {
+                    // Use the real launch height and the actual target height
+                    const swParams = { ...params, targetDistance: d, targetHeight: targetHeight };
+                    const [swAngle] = findOptimalAngle(swParams);
+                    const swAngleRad = swAngle * Math.PI / 180;
+                    // gripMm: positive = walk DOWN the string from the nock
+                    const gripMm = Math.round(Math.tan(swAngleRad) * swRestToCock * 1000 * 10) / 10;
+                    return { distance: d, gripMm, launchAngle: Math.round(swAngle * 100) / 100 };
+                });
                 const impactHeight = interpolateTrajectory(trajectory.X, trajectory.Y, targetDistance);
                 const chartData = [];
                 const step = Math.max(1, Math.floor(trajectory.X.length / 100));
@@ -1548,7 +1599,7 @@ function BallisticSimulator() {
                 const dropData = sightMarks.map(m => ({ x: m.distance, drop: m.dropCm }));
                 const targetDrop = sightMarks.find(m => m.distance === targetDistance)?.dropCm || Math.round((finalLaunchHeight + Math.tan(aimAngle * Math.PI / 180) * targetDistance - impactHeight) * 1000) / 10;
                 const posturalDeltaHeight = usePosturalCorrection ? (finalLaunchHeight - launchHeightNeutral) : 0;
-                setResults({ trajectory, idealTrajectory, aimAngle, effectiveLaunchAngle, nockingAngleOffset, sightMarks, chartData, dropData, impactHeight, targetDrop, maxRangeInfo, finalLaunchHeight, posturalDeltaHeight });
+                setResults({ trajectory, idealTrajectory, aimAngle, effectiveLaunchAngle, nockingAngleOffset, sightMarks, stringwalkMarks, chartData, dropData, impactHeight, targetDrop, maxRangeInfo, finalLaunchHeight, posturalDeltaHeight });
             } catch (err) { console.error(err); alert("Errore: " + err.message); }
             finally { setIsSimulating(false); }
         }, 50);
@@ -1783,7 +1834,7 @@ function BallisticSimulator() {
                 e('div', { className: 'col-span-2' },
                     e(CollapsiblePanel, { titleKey: 'sightPanel', defaultOpen: false },
                         e('div', { className: 'inner-grid-2' },
-                            e(InputFieldWithUnits, { labelKey: 'eyeToNockLabel', valueMetric: eyeToNock, onChange: setEyeToNock, min: 0.08, max: 0.3, step: 0.005, quantity: 'length' }),
+                            e(InputFieldWithUnits, { labelKey: 'eyeToNockLabel', valueMetric: eyeToNock, onChange: setEyeToNock, min: 0.01, max: 0.4, step: 0.005, quantity: 'cm' }),
                             e(InputFieldWithUnits, { labelKey: 'nockToRiserLabel', valueMetric: nockToRiser, onChange: setNockToRiser, min: 0.4, max: 1.2, step: 0.01, quantity: 'length' }),
                             e(InputFieldWithUnits, { labelKey: 'distMinLabel', valueMetric: distMin, onChange: setDistMin, min: 5, max: 50, step: 5, quantity: 'distance' }),
                             e(InputFieldWithUnits, { labelKey: 'distMaxLabel', valueMetric: distMax, onChange: setDistMax, min: 20, max: 150, step: 5, quantity: 'distance' }),
@@ -1810,8 +1861,8 @@ function BallisticSimulator() {
                         results.posturalDeltaHeight !== 0 && e('div', null, `👤 ${t('resultPosturalCorr')}: ${(results.posturalDeltaHeight > 0 ? '+' : '') + (results.posturalDeltaHeight * 100).toFixed(1)} cm → ${t('resultLaunchH')}: ${results.finalLaunchHeight.toFixed(2)} m`)
                     ),
                     e('div', { className: 'tabs-container' },
-                        ['trajectory', 'velocity', 'energy', 'drop', 'sight'].map(tab =>
-                            e('button', { key: tab, onClick: () => setActiveTab(tab), className: 'tab-btn' + (activeTab === tab ? ' active' : '') }, t(tab === 'trajectory' ? 'tabTrajectory' : tab === 'velocity' ? 'tabVelocity' : tab === 'energy' ? 'tabEnergy' : tab === 'drop' ? 'tabDrop' : 'tabSight'))
+                        ['trajectory', 'velocity', 'energy', 'drop', 'sight', 'stringwalk'].map(tab =>
+                            e('button', { key: tab, onClick: () => setActiveTab(tab), className: 'tab-btn' + (activeTab === tab ? ' active' : '') }, t(tab === 'trajectory' ? 'tabTrajectory' : tab === 'velocity' ? 'tabVelocity' : tab === 'energy' ? 'tabEnergy' : tab === 'drop' ? 'tabDrop' : tab === 'sight' ? 'tabSight' : 'tabStringwalk'))
                         )
                     ),
                     e('div', { className: 'tab-content panel' },
@@ -1892,6 +1943,38 @@ function BallisticSimulator() {
                                 ),
                                 e(SightScaleViz, { sightMarks: results.sightMarks, eyeToNock, nockToRiser, darkMode })
                             )
+                        ),
+                        activeTab === 'stringwalk' && e('div', null,
+                            e('div', { className: 'sight-header' },
+                                e('h3', null, t('swTitle')),
+                                e('p', { className: 'label', style: { fontSize: '0.75rem', marginTop: '4px' } }, t('swSubtitle'))
+                            ),
+                            e('p', { className: 'label', style: { fontSize: '0.72rem', color: '#818cf8', marginBottom: '8px' } }, t('swNote')),
+                            e('div', { className: 'sight-table-container' },
+                                e('table', { className: 'sight-table' },
+                                    e('thead', null, e('tr', { className: 'table-header' },
+                                        e('th', { className: 'table-text' }, `${t('distHeader')} (${unitSystem === 'metric' ? 'm' : 'yd'})`),
+                                        e('th', { className: 'table-text' }, t('swGripCol')),
+                                        e('th', { className: 'table-text' }, `${t('aimAngle')} (°)`),
+                                        e('th', { className: 'table-text' }, `${t('energyHeader')} (${unitSystem === 'metric' ? 'J' : 'ft·lb'})`),
+                                        e('th', { className: 'table-text' }, `${t('velocityHeader')} (${unitSystem === 'metric' ? 'm/s' : 'ft/s'})`)
+                                    )),
+                                    e('tbody', null, results.stringwalkMarks && results.stringwalkMarks.map((m, i) => {
+                                        const sm = results.sightMarks.find(s => s.distance === m.distance);
+                                        const energy = sm ? (unitSystem === 'metric' ? sm.energy : conversions.energy_to_imperial(sm.energy)) : 0;
+                                        const vel    = sm ? (unitSystem === 'metric' ? sm.velocity : conversions.speed_to_imperial(sm.velocity)) : 0;
+                                        const dist   = unitSystem === 'metric' ? m.distance : conversions.distance_to_imperial(m.distance);
+                                        return e('tr', { key: m.distance, className: m.distance === targetDistance ? 'table-row-highlight' : (i % 2 === 0 ? 'table-row-even' : '') },
+                                            e('td', { className: 'table-text-bold' }, dist.toFixed(1)),
+                                            e('td', { className: 'table-text', style: { color: m.gripMm >= 0 ? '#22c55e' : '#f87171', fontWeight: 'bold' } }, m.gripMm >= 0 ? `+${m.gripMm.toFixed(1)}` : `${m.gripMm.toFixed(1)}`),
+                                            e('td', { className: 'table-text' }, m.launchAngle.toFixed(2) + '°'),
+                                            e('td', { className: 'table-text' }, energy.toFixed(1)),
+                                            e('td', { className: 'table-text' }, vel.toFixed(1))
+                                        );
+                                    }))
+                                )
+                            ),
+                            e('p', { className: 'label', style: { fontSize: '0.7rem', marginTop: '12px', opacity: 0.6 } }, t('swRef'))
                         )
                     )
                 ) : e('div', { className: 'placeholder panel' },
