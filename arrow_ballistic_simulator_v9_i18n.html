@@ -1262,6 +1262,46 @@ function InputFieldWithUnits({ labelKey, valueMetric, onChange, min, max, step, 
     );
 }
 
+function EyeToNockField({ value, onChange }) {
+    // value è in METRI internamente; il campo mostra e riceve in CENTIMETRI.
+    const { t } = useI18n();
+    const minM = 0.01, maxM = 0.40;
+    const inputRef = React.useRef(null);
+    const [draft, setDraft] = useState((value * 100).toFixed(1));
+    const committedRef = React.useRef(value);
+    useEffect(() => {
+        if (inputRef.current && inputRef.current === document.activeElement) return;
+        committedRef.current = value;
+        setDraft((value * 100).toFixed(1));
+    }, [value]);
+    const commit = (raw) => {
+        const trimmed = (raw || '').trim();
+        if (trimmed === '' || trimmed === '.') {
+            setDraft((committedRef.current * 100).toFixed(1)); return;
+        }
+        let cm = parseFloat(trimmed);
+        if (isNaN(cm)) { setDraft((committedRef.current * 100).toFixed(1)); return; }
+        let metres = Math.max(minM, Math.min(maxM, cm / 100));
+        committedRef.current = metres;
+        setDraft((metres * 100).toFixed(1));
+        if (metres !== value) onChange(metres);
+    };
+    return e('div', { className: 'form-group' },
+        e('label', { className: 'label' }, `${t('eyeToNockLabel')} (cm)`),
+        e('input', {
+            ref: inputRef,
+            type: 'text',
+            inputMode: 'decimal',
+            value: draft,
+            onChange: ev => setDraft(ev.target.value),
+            onBlur: ev => commit(ev.target.value),
+            onKeyDown: ev => { if (ev.key === 'Enter') { commit(ev.target.value); ev.target.blur(); } },
+            className: 'input-field',
+            style: { textAlign: 'right' }
+        })
+    );
+}
+
 function SelectField({ labelKey, value, onChange, options, displayMap }) {
     const { t } = useI18n();
     // displayMap: optional {internalKey: displayLabel} for translating option labels
@@ -1834,7 +1874,7 @@ function BallisticSimulator() {
                 e('div', { className: 'col-span-2' },
                     e(CollapsiblePanel, { titleKey: 'sightPanel', defaultOpen: false },
                         e('div', { className: 'inner-grid-2' },
-                            e(InputFieldWithUnits, { labelKey: 'eyeToNockLabel', valueMetric: eyeToNock, onChange: setEyeToNock, min: 0.01, max: 0.4, step: 0.005, quantity: 'cm' }),
+                            e(EyeToNockField, { value: eyeToNock, onChange: setEyeToNock }),
                             e(InputFieldWithUnits, { labelKey: 'nockToRiserLabel', valueMetric: nockToRiser, onChange: setNockToRiser, min: 0.4, max: 1.2, step: 0.01, quantity: 'length' }),
                             e(InputFieldWithUnits, { labelKey: 'distMinLabel', valueMetric: distMin, onChange: setDistMin, min: 5, max: 50, step: 5, quantity: 'distance' }),
                             e(InputFieldWithUnits, { labelKey: 'distMaxLabel', valueMetric: distMax, onChange: setDistMax, min: 20, max: 150, step: 5, quantity: 'distance' }),
