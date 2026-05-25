@@ -1,6 +1,12 @@
 # 🏹 Arrow Ballistic Simulator for Archers
 
 **A physics-based arrow flight simulator for barebow and stringwalking archers.**
+## 📄 Documentation
+
+| | Italiano | English |
+|---|---|---|
+| **Introduction** | [📥 PDF](https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Simulatore_balistico_Introduzione_v9_IT.pdf) | [📥 PDF](https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Arrow_Ballistic_Simulator_Introduction_v9_EN.pdf) |
+| **User Manual** | [📥 PDF](https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Manuale_Simulatore_Balistico_v9_IT.pdf) | [📥 PDF](https://raw.githubusercontent.com/CP52/Arrow-balistic-simulator-for-Archers/main/Arrow_Ballistic_Simulator_UserManual_v9_EN.pdf) |
 
 Single-file HTML/JS application — no installation, no server, no build step. Open in any browser.
 
@@ -15,6 +21,8 @@ Given your arrow, bow, biometric and environmental parameters, the simulator:
 - Generates a **sight mark table** with riser projection values for each distance
 - Exports a **printable 1:1 PDF sight scale** with calibration rulers (verify 100% print scale)
 - Exports data as **CSV** for further analysis in Excel or similar tools
+- Generates a **stringwalking table**: for each distance, how many mm to walk
+  down the string from the nock to hit the target — with the physics explained
 
 Multilingual interface: 🇮🇹 IT · 🇬🇧 EN · 🇪🇸 ES · 🇫🇷 FR · 🇩🇪 DE  
 Unit systems: metric (m / cm / m/s / J) and imperial (yd / in / ft/s / ft·lb)
@@ -43,6 +51,7 @@ Reference data from JAXA/MSBS wind tunnel measurements (Ortiz Enriquez doctoral 
 | FOC influence | Drag penalty for FOC > 10% (stability/drag trade-off) |
 | Postural correction | Iterative launch height update during T-stance rotation |
 | Sight projection | Parallax geometry (eye–nock–riser triangle) |
+| Stringwalking | Grip point ≡ dynamic nocking offset: gripMm = tan(α) × restToCock × 1000 |
 
 ---
 
@@ -99,6 +108,11 @@ Typical efficiencies: Longbow ~73%, Recurve ~84%, Compound ~89%.
 - **Nock–riser (m/in):** Horizontal distance nock to riser plane
 - **Distance range & step:** Controls the sight mark table
 
+### Stringwalking
+- **Eye–nock (cm):** Set to 2–3 cm for stringwalking (vs. 10–15 cm for
+  Mediterranean grip). Affects Sight tab projection only, not Stringwalking
+  tab calculations.
+
 ---
 
 ## Outputs
@@ -111,11 +125,19 @@ After simulation: aim angle, initial velocity, flight time, max height, drop at 
 - **Velocity:** Total, Vx, Vy components
 - **Energy:** Residual kinetic energy percentage
 - **Drop:** Arrow drop in cm/in per distance
+- **Stringwalking:** Grip point (mm) per distance — how far below the nock to grip the string to hit the target.
 
 ### Sight mark table
 For each distance: drop, riser projection, residual energy, residual velocity.  
 The visual scale on the right shows mark positions graphically.  
 A green dot marks the laser-at-30m reference (≈ eye–nock distance, geometrically exact beyond ~20 m).
+
+### Stringwalking table 🤞
+For each distance: grip point in mm below the nock, launch angle, residual
+energy, residual velocity.
+Positive value = walk down the string. Negative = above the nock (rare,
+only at very short distances).
+The row corresponding to the current target distance is highlighted in yellow.
 
 ### PDF export
 - Full sight table
@@ -161,7 +183,8 @@ After the first load it works offline.
 - **Nocking offset:** Converts mm vertical offset to launch angle offset via arrow geometry (atan2)
 - **No build step:** Pure HTML + vanilla JS + React (CDN) + jsPDF (CDN)
 - **Single file:** ~1,800 lines, self-contained, no server required
-
+- **Stringwalking:** grip point calculated by equivalence with nocking offset:
+  gripMm = tan(α) × restToCock × 1000, where α is the RK4 optimal angle
 ---
 
 ## Limitations
@@ -170,7 +193,7 @@ After the first load it works offline.
 - Arrow treated as rigid body (no spine oscillation / archer's paradox)
 - Energy calculation uses simplified bow efficiency (no measured draw curve)
 - Magnus effect not modelled (negligible below ~1,500 RPM for field archery)
-
+- Stringwalking model simplified: does not account for spine effects or residual vertical string force component (negligible for field archery angles)
 ---
 
 ## References
