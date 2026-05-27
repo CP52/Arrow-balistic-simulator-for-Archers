@@ -169,7 +169,7 @@ Requires an internet connection on first launch to download React and jsPDF from
 After the first load it works offline.
 
 ### 📱 iPhone / iPad
-- **Option 1 (recommended):** open https://arrow-sim.netlify.app in Safari →
+- **Option 1 (recommended):** open https://arrow-sim.vercel.app in Safari →
   tap Share → **Add to Home Screen** for a dedicated icon.
 - **Option 2:** download `arrow_ballistic_simulator_v9_i18n_offline.html`,
   open it in Safari from Files — works without internet.
