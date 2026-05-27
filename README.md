@@ -153,7 +153,7 @@ Copy to clipboard or download. Compatible with Excel, LibreOffice Calc, etc.
 
 ### 🌐 Online (recommended)
 Open directly in your browser:
-**https://arrow-sim.netlify.app**
+**https://arrow-sim.vercel.app**
 Works on PC, Mac, iPhone, Android and tablet — no installation required.
 
 ### 💾 Offline — standalone version
