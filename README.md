@@ -175,6 +175,14 @@ After the first load it works offline.
   open it in Safari from Files — works without internet.
 ---
 
+## 💬 Feedback & Community
+
+## 💬 Feedback & Community
+
+- **Bug or problems:** open an [Issue](https://github.com/CP52/Arrow-ballistic-simulator-for-Archers/issues)
+- **Questions and Discussions:** use [Discussions](https://github.com/CP52/Arrow-ballistic-simulator-for-Archers/discussions)
+- **Email:** only for private matters — c.pagura@outlook.it
+
 ## Technical notes
 
 - **Integration:** Adaptive RK4, step control via Richardson extrapolation, tolerance 10⁻⁶ m
