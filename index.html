@@ -1605,28 +1605,37 @@ function BallisticSimulator() {
                 for (let d = distMin; d <= distMax; d += distStep) distances.push(d);
                 const sightMarks = generateSightMarks(distances, trajectory, params, aimAngle, nockingAngleOffset);
                 // Stringwalking table
-                // Stringwalking table — angle-of-depression preserved across distances.
-                // The archer shoots at a fixed slope angle toward the target.
-                // For each distance d we compute the target height on the same slope,
-                // then find the optimal launch angle and derive the grip point.
+                // Stringwalking table — grip point relative to slope angle.
                 //
-                // slopeAngle   = atan2(targetHeight - finalLaunchHeight, targetDistance)
-                // heightAtD(d) = finalLaunchHeight + tan(slopeAngle) * d
+                // The archer tilts the whole system (bow + arrow) to aim along the
+                // slope toward the target. The grip point does NOT encode the absolute
+                // launch angle, but the CORRECTION relative to the slope direction:
                 //
-                // This gives physically correct grip points for uphill/downhill shots.
+                //   slopeAngle     = atan2(targetHeight - finalLaunchHeight, targetDistance)
+                //   heightAtD(d)   = finalLaunchHeight + tan(slopeAngle) * d
+                //   launchAngle(d) = RK4 optimal angle to hit heightAtD(d) at distance d
+                //   correction(d)  = launchAngle(d) - slopeAngle_deg
+                //   gripMm(d)      = tan(correction_rad) * restToCock * 1000
+                //
+                // This means gripMm is always positive (walk down from nock) for
+                // targets on the slope, because the arrow must be launched slightly
+                // above the visual slope line to compensate for gravity drop.
                 const swRestToCock = length * 0.9;
                 const swSlopeAngle = Math.atan2(
                     targetHeight - finalLaunchHeight,
                     targetDistance
                 );
+                const swSlopeAngleDeg = swSlopeAngle * 180 / Math.PI;
                 const stringwalkMarks = distances.map(d => {
-                    // Height of target at distance d along the same slope
+                    // Target height at distance d along the same slope
                     const swTargetHeight = finalLaunchHeight + Math.tan(swSlopeAngle) * d;
                     const swParams = { ...params, targetDistance: d, targetHeight: swTargetHeight };
                     const [swAngle] = findOptimalAngle(swParams);
-                    const swAngleRad = swAngle * Math.PI / 180;
+                    // Correction angle relative to the slope — this is what the grip encodes
+                    const correctionDeg = swAngle - swSlopeAngleDeg;
+                    const correctionRad = correctionDeg * Math.PI / 180;
                     // gripMm: positive = walk DOWN the string from the nock
-                    const gripMm = Math.round(Math.tan(swAngleRad) * swRestToCock * 1000 * 10) / 10;
+                    const gripMm = Math.round(Math.tan(correctionRad) * swRestToCock * 1000 * 10) / 10;
                     return { distance: d, gripMm, launchAngle: Math.round(swAngle * 100) / 100 };
                 });
                 const impactHeight = interpolateTrajectory(trajectory.X, trajectory.Y, targetDistance);
