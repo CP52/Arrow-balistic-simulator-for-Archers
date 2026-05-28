@@ -108,9 +108,9 @@ Typical efficiencies: Longbow ~73%, Recurve ~84%, Compound ~89%.
 - **Nock–riser (m/in):** Horizontal distance nock to riser plane
 - **Distance range & step:** Controls the sight mark table
 
-### Stringwalking
-- **Eye–nock (cm):** Set to 2–3 cm for stringwalking (vs. 10–15 cm for
-  Mediterranean grip). Affects Sight tab projection only, not Stringwalking
+### Stringwalking/Under nock
+- **Eye–nock (cm):** Set to 2–3 cm for stringwalking or less for under nock (vs. 10–15 cm for
+  Mediterranean grip). This affects Sight tab projection only, not Stringwalking
   tab calculations.
 
 ---
