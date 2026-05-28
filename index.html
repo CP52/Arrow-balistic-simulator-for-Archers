@@ -1605,17 +1605,24 @@ function BallisticSimulator() {
                 for (let d = distMin; d <= distMax; d += distStep) distances.push(d);
                 const sightMarks = generateSightMarks(distances, trajectory, params, aimAngle, nockingAngleOffset);
                 // Stringwalking table
-                // The archer aims along the arrow axis toward the target centre.
-                // Moving the grip down the string by gripMm changes the effective
-                // launch angle relative to the arrow axis by nockingAngleOffset.
-                // For a flat (eye-level) target at height = launchHeight:
-                //   launchAngle = angle needed to reach (d, targetHeight)
-                //   gripMm = tan(launchAngle_rad) * restToCock * 1000
-                // restToCock ≈ arrow length * 0.9
+                // Stringwalking table — angle-of-depression preserved across distances.
+                // The archer shoots at a fixed slope angle toward the target.
+                // For each distance d we compute the target height on the same slope,
+                // then find the optimal launch angle and derive the grip point.
+                //
+                // slopeAngle   = atan2(targetHeight - finalLaunchHeight, targetDistance)
+                // heightAtD(d) = finalLaunchHeight + tan(slopeAngle) * d
+                //
+                // This gives physically correct grip points for uphill/downhill shots.
                 const swRestToCock = length * 0.9;
+                const swSlopeAngle = Math.atan2(
+                    targetHeight - finalLaunchHeight,
+                    targetDistance
+                );
                 const stringwalkMarks = distances.map(d => {
-                    // Use the real launch height and the actual target height
-                    const swParams = { ...params, targetDistance: d, targetHeight: targetHeight };
+                    // Height of target at distance d along the same slope
+                    const swTargetHeight = finalLaunchHeight + Math.tan(swSlopeAngle) * d;
+                    const swParams = { ...params, targetDistance: d, targetHeight: swTargetHeight };
                     const [swAngle] = findOptimalAngle(swParams);
                     const swAngleRad = swAngle * Math.PI / 180;
                     // gripMm: positive = walk DOWN the string from the nock
