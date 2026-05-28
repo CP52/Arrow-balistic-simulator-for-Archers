@@ -177,8 +177,8 @@ After the first load it works offline.
 
 ## 💬 Feedback & Community
 
-- **Bug or problems:** open an [Issue](https://github.com/CP52/Arrow-ballistic-simulator-for-Archers/issues)
-- **Questions and Discussions:** use [Discussions](https://github.com/CP52/Arrow-ballistic-simulator-for-Archers/discussions)
+- **Bug or problems:** open an [Issue](https://github.com/CP52/Arrow-balistic-simulator-for-Archers/issues)
+- **Questions and Discussions:** use [Discussions](https://github.com/CP52/Arrow-balistic-simulator-for-Archers/discussions)
 - **Email:** only for private matters — c.pagura@outlook.it
 
 ## Technical notes
