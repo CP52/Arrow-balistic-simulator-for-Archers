@@ -202,6 +202,45 @@ After the first load it works offline.
 - Stringwalking model simplified: does not account for spine effects or residual vertical string force component (negligible for field archery angles)
 ---
 
+## 🗺️ Roadmap
+
+Features planned for future releases — in no particular order.
+
+### Input & configuration
+- **Mixed units per field:** allow each input field to use its own 
+  unit independently (e.g. draw length in inches, brace height in cm), 
+  regardless of the global metric/imperial toggle. All internal 
+  calculations remain in SI.
+- **Local setup persistence:** save and restore all parameters 
+  automatically via browser localStorage — no more re-entering values 
+  on every session. Optional export/import as JSON for backup and 
+  sharing. Support for multiple named profiles (e.g. "Field arrow", 
+  "3D arrow").
+
+### Physics & calculations
+- **Back-calculation of draw weight from measured v₀:** given a 
+  chronograph-measured v₀, compute the equivalent conventional draw 
+  weight that would produce it. This allows the user to calibrate the 
+  simulator on their real bow and then explore different arrows without 
+  needing a chronograph reading for each one.
+
+### Output
+- **Dual unit column in sight table:** add an inch column alongside 
+  the cm column in the riser projection table, so metric and imperial 
+  values are visible simultaneously without switching the global toggle.
+
+### Stringwalking
+- **Alternative SW conventions:** the current implementation uses the 
+  "arrow at eye level, tip on target" convention. Future versions may 
+  support other mixed techniques with different reference points.
+
+---
+
+*Suggestions and contributions welcome via 
+[Issues](https://github.com/CP52/Arrow-balistic-simulator-for-Archers/issues) 
+or 
+[Discussions](https://github.com/CP52/Arrow-balistic-simulator-for-Archers/discussions).*
+
 ## References
 
 **Arrow aerodynamics & ballistics**
